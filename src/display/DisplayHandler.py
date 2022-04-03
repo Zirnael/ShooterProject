@@ -20,7 +20,9 @@ class DisplayHandler:
 
         for obj in self.objects:
             miniSurface = obj.print()
-            self.screen.blit(miniSurface, obj.position)
+            self.screen.blit(miniSurface, obj.rectangle.topleft)
+
+        pygame.display.flip()
 
     def addObject(self, newObject: DisplayObject) -> None:
         """
@@ -30,7 +32,3 @@ class DisplayHandler:
         :return: None
         """
         self.objects.append(newObject)
-
-    def updateScreen(self) -> None:
-        for obj in self.objects:
-            obj.print()

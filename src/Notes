@@ -1,0 +1,3 @@
+Known Bugs:
+    - up arrow doesnt work when left and right are pressed at the same time
+    - On very small FRAMERATE the collision system is lacking

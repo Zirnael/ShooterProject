@@ -1,11 +1,18 @@
 WIDTH = 500
 HEIGHT = WIDTH
 
-VISION_RANGE = 10  # How many blocks in each direction can a player see
+VISION_RANGE = 10
+"""The visible area is VISION_RANGE * VISION_RANGE square (in blocks"""
+
 MAP_SIZE = 10  # How big the map is (in blocks)
+"""TODO"""
 # TODO Zastosowac Map_size
 
-BLOCK_SIZE = WIDTH / VISION_RANGE  # How many pixels one block on a map has
+BLOCK_SIZE = WIDTH / VISION_RANGE
+"""Building occupy a BLOCK_SIZE * BLOCKSIZE square"""
+
+FRAMERATE = 60
+"""Self explanatory"""
 
 
 class colors:

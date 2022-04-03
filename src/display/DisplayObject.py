@@ -1,13 +1,15 @@
 from abc import abstractmethod, ABC
 from typing import Tuple
-
+import src.Constants as const
 import pygame
 
 
 class DisplayObject(ABC):
-    def __init__(self, position: Tuple[int, int], offset: Tuple[float, float] = (0, 0)):
+    def __init__(self, position: Tuple[int, int]):
         self.position: Tuple[int, int] = position
-        self.offset: Tuple[float, float] = offset
+        """Current position on a map"""
+        self.rectangle = pygame.Rect(position, (const.BLOCK_SIZE, const.BLOCK_SIZE))
+        """Structure to hold position and check for collisions"""
 
     @abstractmethod
     def print(self) -> pygame.Surface:
