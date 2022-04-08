@@ -19,7 +19,6 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.KEYDOWN:
-                gameEngine.rotatePlayer(pygame.mouse.get_pos())
                 key = event.key
                 if key == pygame.K_q or key == pygame.K_ESCAPE:
                     run = False
@@ -27,7 +26,9 @@ def main():
             if event.type == pygame.KEYUP:
                 key = event.key
                 gameEngine.keyRelese(key)
-            gameEngine.rotatePlayer(pygame.mouse.get_pos())
+            if event.type == pygame.MOUSEMOTION:
+                position = event.pos
+                gameEngine.updateMousePosition(position)
 
         gameEngine.progress(dt)
 

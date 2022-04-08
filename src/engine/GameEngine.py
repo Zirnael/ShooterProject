@@ -16,11 +16,12 @@ class GameEngine:
         self.displayHandler = DisplayHandler()
         self.moveVector: List[int, int] = [0, 0]
         self.map = Map()
-        self.player = Player((0, 0), self.map)
-        self.enemy = Enemy((100, 250))
-        #self.addObject(self.player)
+        self.player = Player((0, 0), self.map,"player1.png")
+        self.enemy = Enemy((100, 250),"enemy1.png")
+        # self.addObject(self.player)
         self.displayHandler.addObject(self.player)
         self.addObject(self.enemy)
+        self.mousePosition = (0, 0)
 
     def progress(self, dt: int):
         """
@@ -29,6 +30,7 @@ class GameEngine:
         :return:
         """
         self.player.move(self.moveVector, dt)
+        self.player.rotate(self.mousePosition)
         self.displayHandler.print()
 
     def keyPress(self, key):
@@ -65,6 +67,5 @@ class GameEngine:
         self.displayHandler.addObject(newObject)
         self.map.addObject(newObject.rectangle)
 
-    def rotatePlayer(self,mousePos):
-        self.player.rotate(mousePos)
-
+    def updateMousePosition(self, position):
+        self.mousePosition = position
