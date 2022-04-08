@@ -16,9 +16,9 @@ class GameEngine:
         self.displayHandler = DisplayHandler()
         self.moveVector: List[int, int] = [0, 0]
         self.map = Map()
-        self.player = Player((0, 0), const.colors.WHITE, self.map)
-        self.enemy = Enemy((100, 250), const.colors.RED)
-        # self.addObject(self.player)
+        self.player = Player((0, 0), self.map)
+        self.enemy = Enemy((100, 250))
+        #self.addObject(self.player)
         self.displayHandler.addObject(self.player)
         self.addObject(self.enemy)
 
@@ -64,3 +64,7 @@ class GameEngine:
     def addObject(self, newObject: MapObject):
         self.displayHandler.addObject(newObject)
         self.map.addObject(newObject.rectangle)
+
+    def rotatePlayer(self,mousePos):
+        self.player.rotate(mousePos)
+

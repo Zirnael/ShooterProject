@@ -1,9 +1,11 @@
 import pygame
 from typing import List
+from os import chdir,path
 
 from src.display.DisplayObject import DisplayObject
 import src.Constants as const
 
+chdir(r"..\map")
 
 class DisplayHandler:
     def __init__(self):
@@ -16,7 +18,15 @@ class DisplayHandler:
         Display all the objects onto the pygame display
         :return: None
         """
-        self.screen.fill(const.colors.GREEN)  # background
+        img = pygame.image.load(path.join("images", "grass.jpg")).convert_alpha()
+        img = pygame.transform.scale(img, (const.BLOCK_SIZE, const.BLOCK_SIZE))
+        for i in range(const.MAP_SIZE):
+            for j in range(const.MAP_SIZE):
+                self.screen.blit(img, pygame.Rect((const.BLOCK_SIZE*i,const.BLOCK_SIZE*j), (const.BLOCK_SIZE, const.BLOCK_SIZE)))
+
+
+
+        #self.screen.fill(const.colors.GREEN)  # background
 
         for obj in self.objects:
             miniSurface = obj.print()
@@ -24,11 +34,5 @@ class DisplayHandler:
 
         pygame.display.flip()
 
-    def addObject(self, newObject: DisplayObject) -> None:
-        """
-        Add an object for the displayHandler to handle
-
-        :param newObject: DisplayObject
-        :return: None
-        """
+    def addObject(self, newObject: DisplayObject):
         self.objects.append(newObject)

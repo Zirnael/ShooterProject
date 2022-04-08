@@ -14,11 +14,12 @@ def main():
         dt = clock.tick(const.FRAMERATE)
         """How much time passed since last frame (in mili seconds)"""
 
-        print(round(1000/dt))
+        #print(round(1000/dt))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.KEYDOWN:
+                gameEngine.rotatePlayer(pygame.mouse.get_pos())
                 key = event.key
                 if key == pygame.K_q or key == pygame.K_ESCAPE:
                     run = False
@@ -26,6 +27,7 @@ def main():
             if event.type == pygame.KEYUP:
                 key = event.key
                 gameEngine.keyRelese(key)
+            gameEngine.rotatePlayer(pygame.mouse.get_pos())
 
         gameEngine.progress(dt)
 
