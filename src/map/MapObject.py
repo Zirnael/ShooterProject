@@ -21,8 +21,13 @@ class MapObject(DisplayObject, ABC):
         # TODO self.image - to display something other than square
         img = pygame.image.load(path.join("images", self.texture)).convert_alpha()
         img = pygame.transform.scale(img, (const.BLOCK_SIZE, const.BLOCK_SIZE))
-        img = pygame.transform.rotate(img, -degrees(self.angle))
+        orig_rect = img.get_rect()
+        rot_image = pygame.transform.rotate(img, -degrees(self.angle))
+        rot_rect = orig_rect.copy()
+        rot_rect.center = rot_image.get_rect().center
+        rot_image = rot_image.subsurface(rot_rect).copy()
+        return rot_image
 
         '''surface: pygame.Surface = pygame.Surface((const.BLOCK_SIZE, const.BLOCK_SIZE))
         surface.fill(self.color)'''
-        return img
+
