@@ -8,6 +8,7 @@ Aleksander  poruszanie się (kolizja z przeszkodami, określenie pozycji, prędk
 lab4 - 
 Aleksander podstawowi przeciwnicy, power upy (apteczka, osłona)
 Michał możliwość strzelania (granaty), bronie,
+
 lab5 - 
 Aleksander wieżyczki, sklep, kopalnia, budowanie muru,  możliwośc rozbudowy
 Michał menu postaci - ulepszenia (życie, pancerz, pieniądze, obrażenia, 

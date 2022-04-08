@@ -2,8 +2,9 @@ from abc import abstractmethod, ABC
 from typing import Tuple
 import src.Constants as const
 import pygame
+import os.path
 
-
+os.chdir(r"..\display")
 class DisplayObject(ABC):
     def __init__(self, position: Tuple[int, int]):
         self.position: Tuple[int, int] = position
@@ -12,11 +13,11 @@ class DisplayObject(ABC):
         """Structure to hold position and check for collisions"""
 
     @abstractmethod
-    def print(self) -> pygame.Surface:
-        """
-        Create and return Surface with size of Block representing an object.
+    def print(self):
 
-        It will then be drawn onto the screen in appropriate block on map
 
-        :return: pygame.Surface
-        """
+        ''' Create and return Surface with size of Block representing an object.
+
+        It will then be drawn onto the screen in appropriate block on map'''
+
+
