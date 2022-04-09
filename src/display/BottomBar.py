@@ -15,7 +15,8 @@ class BottomBar(DisplayObject):
         self.surface = pygame.Surface((WIDTH,SCREEN_HEIGHT-BOTTOM_BAR_HEIGHT))
         self.player = player
         self.topleft = position
-
+    
+    #TODO Display bottom bar with health
 
     def print(self) -> pygame.Surface:
         if pygame.font:
