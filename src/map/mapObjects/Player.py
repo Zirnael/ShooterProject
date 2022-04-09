@@ -53,12 +53,11 @@ class Player(MapObject):
     def rotate(self, mouse_pos):
         cursorDistance = sqrt(
             (mouse_pos[0] - self.rectangle.center[0]) ** 2 + (mouse_pos[1] - self.rectangle.center[1]) ** 2)
-        if cursorDistance < 20:
-            return
+
 
         newAngle = self.angle
-        if mouse_pos[0] == self.rectangle.center[0] and mouse_pos[1] == self.rectangle.center[1]:
-            return 0
+        if cursorDistance == 0:
+            return
         cosa = (mouse_pos[1] - self.rectangle.center[1]) / cursorDistance
         # print(cosa)
         if abs(mouse_pos[0] - self.rectangle.center[0]) > 0.00001:

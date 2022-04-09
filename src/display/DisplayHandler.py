@@ -13,17 +13,17 @@ class DisplayHandler:
         from src.Constants import WIDTH, HEIGHT
         self.screen: pygame.Surface = pygame.display.set_mode((WIDTH, HEIGHT))
         self.objects: List[DisplayObject] = []
+        self.background: pygame.Surface = pygame.image.load(path.join("images", "grass.jpg")).convert_alpha()
+        self.background = pygame.transform.scale(self.background, (const.BLOCK_SIZE, const.BLOCK_SIZE))
 
     def print(self) -> None:
         """
         Display all the objects onto the pygame display
         :return: None
         """
-        img = pygame.image.load(path.join("images", "grass.jpg")).convert_alpha()
-        img = pygame.transform.scale(img, (const.BLOCK_SIZE, const.BLOCK_SIZE))
         for i in range(const.MAP_SIZE):
             for j in range(const.MAP_SIZE):
-                self.screen.blit(img, pygame.Rect((const.BLOCK_SIZE * i, const.BLOCK_SIZE * j),
+                self.screen.blit(self.background, pygame.Rect((const.BLOCK_SIZE * i, const.BLOCK_SIZE * j),
                                                   (const.BLOCK_SIZE, const.BLOCK_SIZE)))
 
         # self.screen.fill(const.colors.GREEN)  # background

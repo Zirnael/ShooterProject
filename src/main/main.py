@@ -14,7 +14,7 @@ def main():
         dt = clock.tick(const.FRAMERATE)
         """How much time passed since last frame (in mili seconds)"""
 
-        #print(round(1000/dt))
+        print(round(1000/dt))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
