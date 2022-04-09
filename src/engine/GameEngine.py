@@ -8,7 +8,7 @@ from src.map.Map import Map
 from src.map.mapObjects.Enemy import Enemy
 from src.map.mapObjects.Player import Player
 from src.map.MapObject import MapObject
-
+from src.display.BottomBar import BottomBar
 
 class GameEngine:
 
@@ -21,6 +21,8 @@ class GameEngine:
         self.displayHandler.addObject(self.player)
         self.addObject(self.enemy)
         self.mousePosition = (0, 0)
+        self.bottom_bar = BottomBar((0,const.HEIGHT),None,self.player)
+        self.displayHandler.addObject(self.bottom_bar)
 
     def progress(self, dt: int):
         """
@@ -28,6 +30,7 @@ class GameEngine:
         :param dt: How much time passed since the last frame
         :return:
         """
+
         self.player.move(self.moveVector, dt)
         self.player.rotate(self.mousePosition)
         self.displayHandler.print()

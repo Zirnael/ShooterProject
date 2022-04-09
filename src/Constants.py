@@ -1,5 +1,8 @@
+BOTTOM_BAR_HEIGHT = 60
+
 WIDTH = 500
 HEIGHT = WIDTH
+SCREEN_HEIGHT = HEIGHT + BOTTOM_BAR_HEIGHT
 
 VISION_RANGE = 10
 """The visible area is VISION_RANGE * VISION_RANGE square (in blocks"""
@@ -13,6 +16,8 @@ BLOCK_SIZE = WIDTH / VISION_RANGE
 
 FRAMERATE = 60
 """Self explanatory"""
+
+
 
 
 class colors:

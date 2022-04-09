@@ -6,7 +6,7 @@ import os.path
 
 os.chdir(r"..\display")
 class DisplayObject(ABC):
-    def __init__(self, position: Tuple[int, int]):
+    def __init__(self, position: Tuple[int, int],*argv):
         self.position: Tuple[int, int] = position
         """Current position on a map"""
         self.rectangle = pygame.Rect(position, (const.BLOCK_SIZE, const.BLOCK_SIZE))
