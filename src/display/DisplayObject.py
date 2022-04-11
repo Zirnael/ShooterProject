@@ -5,8 +5,12 @@ import pygame
 import os.path
 
 os.chdir(r"..\display")
+
+
 class DisplayObject(ABC):
-    def __init__(self, position: Tuple[int, int],*argv):
+    def __init__(self, position: Tuple[int, int], *argv):
+        # TODO czym jest *argv?
+
         self.position: Tuple[int, int] = position
         """Current position on a map"""
         self.rectangle = pygame.Rect(position, (const.BLOCK_SIZE, const.BLOCK_SIZE))
@@ -14,10 +18,6 @@ class DisplayObject(ABC):
 
     @abstractmethod
     def print(self):
-
-
         ''' Create and return Surface with size of Block representing an object.
 
         It will then be drawn onto the screen in appropriate block on map'''
-
-

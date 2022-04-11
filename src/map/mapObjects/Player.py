@@ -10,7 +10,10 @@ class Player(MapObject):
 
     def __init__(self, position: Tuple[int, int], mapObject: Map, texture: str):
         super().__init__(position, texture)
-        self.speed = const.BLOCK_SIZE * 0.2 / 60
+
+        self.speed = const.BLOCK_SIZE / 250
+        """distance in 1 ms"""
+
         self.size = (const.BLOCK_SIZE, const.BLOCK_SIZE)
         self.map = mapObject
         self.health = 10
@@ -25,6 +28,11 @@ class Player(MapObject):
         xMove, yMove = moveVector
         xMove *= self.speed * dt
         yMove *= self.speed * dt
+        if xMove > 0:
+            xMove = max(1, xMove)
+        if yMove > 0:
+            yMove = max(1, yMove)
+
         newX = x + xMove
         newY = y + yMove
         newY = max(0, newY)
@@ -54,7 +62,6 @@ class Player(MapObject):
     def rotate(self, mouse_pos):
         cursorDistance = sqrt(
             (mouse_pos[0] - self.rectangle.center[0]) ** 2 + (mouse_pos[1] - self.rectangle.center[1]) ** 2)
-
 
         newAngle = self.angle
         if cursorDistance == 0:

@@ -18,7 +18,6 @@ class MapObject(DisplayObject, ABC):
         self.img = pygame.transform.scale(self.img, (const.BLOCK_SIZE, const.BLOCK_SIZE))
 
     def print(self) -> pygame.Surface:
-        # TODO self.image - to display something other than square
         orig_rect = self.img.get_rect()
         rot_image = pygame.transform.rotate(self.img, -degrees(self.angle))
         rot_rect = orig_rect.copy()
