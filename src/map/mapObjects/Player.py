@@ -8,15 +8,16 @@ from src.map.Map import Map
 
 class Player(MapObject):
 
-    def __init__(self, position: Tuple[int, int], map: Map, texture: str):
+    def __init__(self, position: Tuple[int, int], mapObject: Map, texture: str):
         super().__init__(position, texture)
         self.speed = const.BLOCK_SIZE * 0.2 / 60
         self.size = (const.BLOCK_SIZE, const.BLOCK_SIZE)
-        self.map = map
+        self.map = mapObject
         self.health = 10
         self.angle = 0
 
     def move(self, moveVector: List[int], dt: int):
+
         x, y = self.rectangle.topleft
         destination = self.rectangle.copy()
 
