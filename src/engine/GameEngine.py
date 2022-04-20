@@ -18,19 +18,15 @@ class GameEngine:
         self.moveVector: List[int, int] = [0, 0]
         self.map = CollisionMap()
         self.player = Player((0, 0), self.map, "player1.png")
-        self.enemy = Enemy((100, 250), self.map, "enemy1.png")
-        self.enemy2 = Enemy((200, 250), self.map, "enemy1.png")
 
         self.enemies = []
-        for i in range(10):
-            newEnemy = Enemy((i*40,200),self.map,"enemy1.png")
+        for i in range(3):
+            newEnemy = Enemy((i * 40, 200), self.map, "enemy1.png")
             self.enemies.append(newEnemy)
             self.addCollidingObject(newEnemy)
 
         self.displayHandler.addObject(self.player)
         self.addPlayer()
-        self.addCollidingObject(self.enemy)
-        self.addCollidingObject(self.enemy2)
 
         self.mousePosition = (0, 0)
         self.bottom_bar = BottomBar((0, const.HEIGHT), "kotek", self.player)
@@ -45,13 +41,13 @@ class GameEngine:
         if any(self.moveVector):  # move only if some key is pressed
             self.player.move(self.moveVector, dt)
         self.player.rotate(self.mousePosition)
-        self.enemy.simpleMove(dt, self.player.position())
-        self.enemy.rotate(self.player.position())
-        self.enemy2.simpleMove(dt, self.player.position())
-        for enemy in self.enemies:
-            enemy.simpleMove(dt,self.player.position())
-            enemy.rotate(self.player.position())
-        self.enemy2.rotate(self.player.position())
+
+        if self.player.alive:
+            for enemy in self.enemies:
+                if enemy.simpleMove(dt, self.player.position()):
+                    self.player.hit()
+                    print(f"hit! {self.player.health}")
+                enemy.rotate(self.player.position())
         self.displayHandler.print()
 
     def keyPress(self, key):

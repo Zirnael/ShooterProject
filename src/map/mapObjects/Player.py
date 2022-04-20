@@ -13,9 +13,17 @@ class Player(RotatingMapObject):
         self.size = (const.BLOCK_SIZE, const.BLOCK_SIZE)
         self.map = collisionMap
         self.health = 10
+        self.alive = True
+
+    def hit(self):
+        self.health -= 1
+        if self.health <= 0:
+            self.alive = False
 
     def move(self, moveVector: List[int], dt: int):
 
+        if not self.alive:
+            return
         x, y = self.displayRectangle.center
         destination = self.displayRectangle.copy()
 

@@ -15,19 +15,19 @@ class Enemy(RotatingMapObject):
 
     def __init__(self, position: Tuple[int, int], collisionMap: CollisionMap, texture: str):
         super().__init__(position, texture, const.ENEMYCOLLISIONSIZE)
-        self.hitDelay: int = 0
+        self.hitDelay: int = -const.AFTERHITDELAY
         self.speed: float = const.ENEMYSPEED * (random.random() + 0.5)
         self.map: CollisionMap = collisionMap
 
-    def simpleMove(self, dt: int, targetPosition: tuple[int, int]):
+    def simpleMove(self, dt: int, targetPosition: tuple[int, int]) -> bool:
         """
         Move in target direction
         :param dt:
         :param targetPosition:
-        :return:
+        :return: True if hit the target, otherwise false
         """
         if pygame.time.get_ticks() - self.hitDelay < const.AFTERHITDELAY:
-            return
+            return False
         xTarget, yTarget = targetPosition
         xMe, yMe = self.displayRectangle.center
 
@@ -52,15 +52,14 @@ class Enemy(RotatingMapObject):
         destination = self.collisionRectangle.copy()
         destination.center = newPosition
         if self.map.doesOverlapPlayer(destination):
-            print("hit!")
             self.hitDelay = pygame.time.get_ticks()
-            return
+            return True
         if self.map.isLegalPosition(destination, self.collisionRectangle):
             self.changePosition(newPosition)
+        return False
 
     def randomMoveDistance(self, dt: int, differenceInPositions) -> float:
         """
-
         :param dt:
         :param differenceInPositions: The bigger the difference the less wiggle
         :return:
