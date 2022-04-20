@@ -7,8 +7,8 @@ from abc import ABC
 
 
 class RotatingMapObject(MapObject, ABC):
-    def __init__(self, position: Tuple[int, int], texture: str):
-        super().__init__(position, texture)
+    def __init__(self, position: Tuple[int, int], texture: str, collisionRectangleSize: int):
+        super().__init__(position, texture, collisionRectangleSize)
         self.angle: float = 0
 
     def print(self) -> pygame.Surface:
@@ -21,20 +21,21 @@ class RotatingMapObject(MapObject, ABC):
 
     def rotate(self, targetPosition):
         cursorDistance = sqrt(
-            (targetPosition[0] - self.rectangle.center[0]) ** 2 + (targetPosition[1] - self.rectangle.center[1]) ** 2)
+            (targetPosition[0] - self.displayRectangle.center[0]) ** 2 + (
+                        targetPosition[1] - self.displayRectangle.center[1]) ** 2)
 
         newAngle = self.angle
         if cursorDistance == 0:
             return
-        cosa = (targetPosition[1] - self.rectangle.center[1]) / cursorDistance
+        cosa = (targetPosition[1] - self.displayRectangle.center[1]) / cursorDistance
         # print(cosa)
-        if abs(targetPosition[0] - self.rectangle.center[0]) > 0.00001:
-            newAngle = (((-targetPosition[0] + self.rectangle.center[0]) / abs(
-                -targetPosition[0] + self.rectangle.center[0])) * acos(cosa) - pi * (13 / 10)) % (2 * pi)
+        if abs(targetPosition[0] - self.displayRectangle.center[0]) > 0.00001:
+            newAngle = (((-targetPosition[0] + self.displayRectangle.center[0]) / abs(
+                -targetPosition[0] + self.displayRectangle.center[0])) * acos(cosa) - pi * (13 / 10)) % (2 * pi)
         else:
-            if targetPosition[1] > self.rectangle.center[1]:
+            if targetPosition[1] > self.displayRectangle.center[1]:
                 newAngle = (0 - pi * (13 / 10)) % (2 * pi)
-            elif targetPosition[1] < self.rectangle.center[1]:
+            elif targetPosition[1] < self.displayRectangle.center[1]:
                 newAngle = (pi - pi * (13 / 10)) % (2 * pi)
         self.angle = newAngle
 
@@ -43,4 +44,3 @@ class RotatingMapObject(MapObject, ABC):
 
         surf.blit(rotated_image, new_rect)
         return angle'''
-

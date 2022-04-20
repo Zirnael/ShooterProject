@@ -31,7 +31,7 @@ class DisplayHandler:
 
         for obj in self.objects:
             miniSurface = obj.print()
-            self.screen.blit(miniSurface, obj.rectangle.topleft)
+            self.screen.blit(miniSurface, obj.displayRectangle.topleft)
         if debugPositions:
             for x in debugPositions:
                 pygame.draw.circle(self.screen, const.colors.RED, x, 3)

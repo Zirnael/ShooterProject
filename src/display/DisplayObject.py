@@ -10,7 +10,7 @@ class DisplayObject(ABC):
     def __init__(self, position: Tuple[int, int], *argv):
         # TODO czym jest *argv?
 
-        self.rectangle = pygame.Rect(position, (const.BLOCK_SIZE, const.BLOCK_SIZE))
+        self.displayRectangle = pygame.Rect(position, (const.BLOCK_SIZE, const.BLOCK_SIZE))
         """Structure to hold position and check for collisions"""
 
     @abstractmethod

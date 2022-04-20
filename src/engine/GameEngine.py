@@ -4,7 +4,7 @@ import pygame
 
 import src.Constants as const
 from src.display.DisplayHandler import DisplayHandler
-from src.map.CollisionMap import Map
+from src.map.CollisionMap import CollisionMap
 from src.map.mapObjects.Enemy import Enemy
 from src.map.mapObjects.Player import Player
 from src.map.MapObject import MapObject
@@ -16,13 +16,21 @@ class GameEngine:
     def __init__(self):
         self.displayHandler = DisplayHandler()
         self.moveVector: List[int, int] = [0, 0]
-        self.map = Map()
+        self.map = CollisionMap()
         self.player = Player((0, 0), self.map, "player1.png")
         self.enemy = Enemy((100, 250), self.map, "enemy1.png")
+        self.enemy2 = Enemy((200, 250), self.map, "enemy1.png")
+
+        self.enemies = []
+        for i in range(10):
+            newEnemy = Enemy((i*40,200),self.map,"enemy1.png")
+            self.enemies.append(newEnemy)
+            self.addCollidingObject(newEnemy)
+
         self.displayHandler.addObject(self.player)
-        # self.addObject(self.enemy)
-        # TODO Debug
-        self.addNonCollidingObject(self.enemy)
+        self.addPlayer()
+        self.addCollidingObject(self.enemy)
+        self.addCollidingObject(self.enemy2)
 
         self.mousePosition = (0, 0)
         self.bottom_bar = BottomBar((0, const.HEIGHT), "kotek", self.player)
@@ -39,7 +47,12 @@ class GameEngine:
         self.player.rotate(self.mousePosition)
         self.enemy.simpleMove(dt, self.player.position())
         self.enemy.rotate(self.player.position())
-        self.displayHandler.print([self.player.position(), self.enemy.position()])
+        self.enemy2.simpleMove(dt, self.player.position())
+        for enemy in self.enemies:
+            enemy.simpleMove(dt,self.player.position())
+            enemy.rotate(self.player.position())
+        self.enemy2.rotate(self.player.position())
+        self.displayHandler.print()
 
     def keyPress(self, key):
         """
@@ -49,11 +62,11 @@ class GameEngine:
         """
         if key == pygame.K_LEFT:
             self.moveVector[0] -= 1
-        if key == pygame.K_RIGHT:
+        elif key == pygame.K_RIGHT:
             self.moveVector[0] += 1
-        if key == pygame.K_DOWN:
+        elif key == pygame.K_DOWN:
             self.moveVector[1] += 1
-        if key == pygame.K_UP:
+        elif key == pygame.K_UP:
             self.moveVector[1] -= 1
 
     def keyRelese(self, key):
@@ -64,19 +77,23 @@ class GameEngine:
         """
         if key == pygame.K_LEFT:
             self.moveVector[0] += 1
-        if key == pygame.K_RIGHT:
+        elif key == pygame.K_RIGHT:
             self.moveVector[0] -= 1
-        if key == pygame.K_DOWN:
+        elif key == pygame.K_DOWN:
             self.moveVector[1] -= 1
-        if key == pygame.K_UP:
+        elif key == pygame.K_UP:
             self.moveVector[1] += 1
 
-    def addColligingObject(self, newObject: MapObject):
+    def addCollidingObject(self, newObject: MapObject):
         self.displayHandler.addObject(newObject)
-        self.map.addObject(newObject.rectangle)
+        self.map.addObject(newObject)
 
     def addNonCollidingObject(self, newObject: MapObject):
         self.displayHandler.addObject(newObject)
+
+    def addPlayer(self):
+        self.displayHandler.addObject(self.player)
+        self.map.assignPlayer(self.player.collisionRectangle)
 
     def updateMousePosition(self, position):
         self.mousePosition = position

@@ -17,7 +17,17 @@ BLOCK_SIZE = WIDTH / VISION_RANGE
 FRAMERATE = 60
 """Self explanatory"""
 
+AFTERHITDELAY = 1000
+"""How much time the enemy doesnt move after attacking the player"""
 
+ENEMYSPEED = BLOCK_SIZE / 300
+"""distance in 1 ms"""
+
+PLAYERSPEED = BLOCK_SIZE / 250
+"""distance in 1 ms"""
+
+ENEMYCOLLISIONSIZE = BLOCK_SIZE / 4
+"""Size of CollisionRectangle of Enemies"""
 
 
 class colors:
