@@ -1,13 +1,10 @@
 import pygame
 from typing import List
-import src.Constants as const
 
-mSize = const.MAP_SIZE
 
 class Map:
     def __init__(self):
-        self.objects : List[pygame.Rect] = []
-
+        self.objects: List[pygame.Rect] = []
 
     def addObject(self, newObject: pygame.Rect):
         self.objects.append(newObject)

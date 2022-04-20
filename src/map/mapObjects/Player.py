@@ -1,23 +1,20 @@
 from typing import Tuple, List
-from math import pi, sqrt, acos, asin
-
 import src.Constants as const
-from src.map.MapObject import MapObject
-from src.map.Map import Map
+from src.map.CollisionMap import Map
+from src.map.RotatingMapObject import RotatingMapObject
 
 
-class Player(MapObject):
+class Player(RotatingMapObject):
 
-    def __init__(self, position: Tuple[int, int], mapObject: Map, texture: str):
+    def __init__(self, position: Tuple[int, int], collisionMap: Map, texture: str):
         super().__init__(position, texture)
 
-        self.speed = const.BLOCK_SIZE / 250
+        self.speed = const.BLOCK_SIZE / 400
         """distance in 1 ms"""
 
         self.size = (const.BLOCK_SIZE, const.BLOCK_SIZE)
-        self.map = mapObject
+        self.map = collisionMap
         self.health = 10
-        self.angle = 0
 
     def move(self, moveVector: List[int], dt: int):
 
@@ -59,27 +56,5 @@ class Player(MapObject):
                 self.rectangle.topleft = newPosition
                 return
 
-    def rotate(self, mouse_pos):
-        cursorDistance = sqrt(
-            (mouse_pos[0] - self.rectangle.center[0]) ** 2 + (mouse_pos[1] - self.rectangle.center[1]) ** 2)
 
-        newAngle = self.angle
-        if cursorDistance == 0:
-            return
-        cosa = (mouse_pos[1] - self.rectangle.center[1]) / cursorDistance
-        # print(cosa)
-        if abs(mouse_pos[0] - self.rectangle.center[0]) > 0.00001:
-            newAngle = (((-mouse_pos[0] + self.rectangle.center[0]) / abs(
-                -mouse_pos[0] + self.rectangle.center[0])) * acos(cosa) - pi * (13 / 10)) % (2 * pi)
-        else:
-            if mouse_pos[1] > self.rectangle.center[1]:
-                newAngle = (0 - pi * (13 / 10)) % (2 * pi)
-            elif mouse_pos[1] < self.rectangle.center[1]:
-                newAngle = (pi - pi * (13 / 10)) % (2 * pi)
-        self.angle = newAngle
 
-        '''rotated_image = pygame.transform.rotate(image, angle)
-        new_rect = rotated_image.get_rect(center=image.get_rect(topleft=topleft).center)
-
-        surf.blit(rotated_image, new_rect)
-        return angle'''

@@ -4,7 +4,8 @@ from os import chdir, path
 
 from src.display.DisplayObject import DisplayObject
 import src.Constants as const
-from src.Constants import WIDTH, HEIGHT, BOTTOM_BAR_HEIGHT ,SCREEN_HEIGHT, BLOCK_SIZE
+from src.Constants import WIDTH, HEIGHT, BOTTOM_BAR_HEIGHT, SCREEN_HEIGHT, BLOCK_SIZE
+
 chdir(r"..\map")
 
 
@@ -16,7 +17,7 @@ class DisplayHandler:
         self.background: pygame.Surface = pygame.image.load(path.join("images", "grass.jpg")).convert_alpha()
         self.background = pygame.transform.scale(self.background, (BLOCK_SIZE, BLOCK_SIZE))
 
-    def print(self) -> None:
+    def print(self, debugPositions=None) -> None:
         """
         Display all the objects onto the pygame display
         :return: None
@@ -24,15 +25,16 @@ class DisplayHandler:
         for i in range(const.MAP_SIZE):
             for j in range(const.MAP_SIZE):
                 self.screen.blit(self.background, pygame.Rect((BLOCK_SIZE * i, BLOCK_SIZE * j),
-                                                  (BLOCK_SIZE, BLOCK_SIZE)))
-
+                                                              (BLOCK_SIZE, BLOCK_SIZE)))
 
         # self.screen.fill(const.colors.GREEN)  # background
 
         for obj in self.objects:
             miniSurface = obj.print()
             self.screen.blit(miniSurface, obj.rectangle.topleft)
-
+        if debugPositions:
+            for x in debugPositions:
+                pygame.draw.circle(self.screen, const.colors.RED, x, 3)
 
         pygame.display.flip()
 

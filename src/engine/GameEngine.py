@@ -4,7 +4,7 @@ import pygame
 
 import src.Constants as const
 from src.display.DisplayHandler import DisplayHandler
-from src.map.Map import Map
+from src.map.CollisionMap import Map
 from src.map.mapObjects.Enemy import Enemy
 from src.map.mapObjects.Player import Player
 from src.map.MapObject import MapObject
@@ -18,11 +18,14 @@ class GameEngine:
         self.moveVector: List[int, int] = [0, 0]
         self.map = Map()
         self.player = Player((0, 0), self.map, "player1.png")
-        self.enemy = Enemy((100, 250), "enemy1.png")
+        self.enemy = Enemy((100, 250), self.map, "enemy1.png")
         self.displayHandler.addObject(self.player)
-        self.addObject(self.enemy)
+        # self.addObject(self.enemy)
+        # TODO Debug
+        self.addNonCollidingObject(self.enemy)
+
         self.mousePosition = (0, 0)
-        self.bottom_bar = BottomBar((0, const.HEIGHT), None, self.player)
+        self.bottom_bar = BottomBar((0, const.HEIGHT), "kotek", self.player)
         self.displayHandler.addObject(self.bottom_bar)
 
     def progress(self, dt: int):
@@ -31,10 +34,12 @@ class GameEngine:
         :param dt: How much time passed since the last frame
         :return:
         """
-        if any(self.moveVector):    # move only if some key is pressed
+        if any(self.moveVector):  # move only if some key is pressed
             self.player.move(self.moveVector, dt)
         self.player.rotate(self.mousePosition)
-        self.displayHandler.print()
+        self.enemy.simpleMove(dt, self.player.position())
+        self.enemy.rotate(self.player.position())
+        self.displayHandler.print([self.player.position(), self.enemy.position()])
 
     def keyPress(self, key):
         """
@@ -66,9 +71,12 @@ class GameEngine:
         if key == pygame.K_UP:
             self.moveVector[1] += 1
 
-    def addObject(self, newObject: MapObject):
+    def addColligingObject(self, newObject: MapObject):
         self.displayHandler.addObject(newObject)
         self.map.addObject(newObject.rectangle)
+
+    def addNonCollidingObject(self, newObject: MapObject):
+        self.displayHandler.addObject(newObject)
 
     def updateMousePosition(self, position):
         self.mousePosition = position
