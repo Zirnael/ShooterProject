@@ -6,22 +6,28 @@ from src.map.MapObject import MapObject
 
 class CollisionMap:
     def __init__(self):
-        self.objects: List[pygame.Rect] = []
+        self.buildings: List[pygame.Rect] = []
+        self.enemies: List[pygame.Rect] = []
         self.playerRect: Optional[pygame.Rect] = None
 
-    def addObject(self, newObject: MapObject):
-        self.objects.append(newObject.collisionRectangle)
+    def addEnemy(self, newObject: MapObject):
+        self.enemies.append(newObject.collisionRectangle)
 
-    def removeObject(self, objectToRemove: MapObject):
-        self.objects.remove(objectToRemove.collisionRectangle)
+    def removeEnemy(self, objectToRemove: MapObject):
+        self.enemies.remove(objectToRemove.collisionRectangle)
 
-    def isLegalPosition(self, destination: pygame.Rect, caller: pygame.Rect = None) -> bool:
-        copy = self.objects.copy()
+    def isLegalPosition(self, destination: pygame.Rect, callerEnemy: pygame.Rect = None) -> bool:
+        copy = self.enemies.copy()
         try:
-            copy.remove(caller)
+            copy.remove(callerEnemy)
         except ValueError:
             pass
-        return destination.collidelist(copy) == -1
+        if destination.collidelist(copy) != -1:
+            return False
+        if destination.collidelist(self.buildings) != -1:
+            return False
+
+        return True
 
     def doesOverlapPlayer(self, rect: pygame.Rect) -> bool:
         if self.playerRect is None:
@@ -30,3 +36,6 @@ class CollisionMap:
 
     def assignPlayer(self, pRect: pygame.Rect):
         self.playerRect: pygame.Rect = pRect
+
+
+

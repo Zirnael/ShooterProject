@@ -9,16 +9,11 @@ class Player(RotatingMapObject):
     def __init__(self, position: Tuple[int, int], collisionMap: cm.CollisionMap, texture: str):
         super().__init__(position, texture, const.BLOCK_SIZE)
 
-        self.speed = const.PLAYERSPEED
+        self.speed = const.PLAYER_SPEED
         self.size = (const.BLOCK_SIZE, const.BLOCK_SIZE)
         self.map = collisionMap
         self.health = 10
         self.alive = True
-
-    def hit(self):
-        self.health -= 1
-        if self.health <= 0:
-            self.alive = False
 
     def move(self, moveVector: List[int], dt: int):
 
@@ -46,8 +41,6 @@ class Player(RotatingMapObject):
         newPosition = (newX, newY)
         destination.center = newPosition
 
-        self.changePosition(newPosition)
-
         if self.map.isLegalPosition(destination):
             self.changePosition(newPosition)
             return
@@ -66,3 +59,13 @@ class Player(RotatingMapObject):
             if self.map.isLegalPosition(destination):
                 self.changePosition(newPosition)
                 return
+
+    def heal(self, amount: int):
+        if self.alive:
+            self.health += amount
+
+    def hit(self):
+        if self.alive:
+            self.health -= 1
+            if self.health <= 0:
+                self.alive = False

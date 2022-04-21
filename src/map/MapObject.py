@@ -10,6 +10,12 @@ import src.Constants as const
 class MapObject(DisplayObject, ABC):
 
     def __init__(self, position: Tuple[int, int], texture: str, collistionRectangleSize: int):
+        """
+        Object which is displayed on the map and uses collisions
+        :param position: Initial position on the map
+        :param texture:
+        :param collistionRectangleSize: The size of collision can be different from the size of texture displayed
+        """
         super().__init__(position)
         self.img: pygame.Surface = pygame.image.load(path.join("images", texture)).convert_alpha()
         self.img = pygame.transform.scale(self.img, (const.BLOCK_SIZE, const.BLOCK_SIZE))

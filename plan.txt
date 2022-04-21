@@ -2,7 +2,7 @@ endless war
 
 
 lab3 - 
-Michał	mapa(przeszkody,grafika wyświetlanie, pasek na dole[z życiem itd])  
+Michał	mapa(przeszkody,grafika wyświetlanie, pasek na dole[z życiem itd])
 Aleksander  poruszanie się (kolizja z przeszkodami, określenie pozycji, prędkość), celowanie
 
 lab4 - 

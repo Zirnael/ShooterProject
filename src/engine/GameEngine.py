@@ -5,9 +5,11 @@ import pygame
 import src.Constants as const
 from src.display.DisplayHandler import DisplayHandler
 from src.map.CollisionMap import CollisionMap
+from src.map.mapObjects.Building import Building
 from src.map.mapObjects.Enemy import Enemy
 from src.map.mapObjects.Player import Player
 from src.map.MapObject import MapObject
+from src.map.mapObjects.Buildings.Drugstore import Drugstore
 from src.display.BottomBar import BottomBar
 
 
@@ -17,20 +19,24 @@ class GameEngine:
         self.displayHandler = DisplayHandler()
         self.moveVector: List[int, int] = [0, 0]
         self.map = CollisionMap()
-        self.player = Player((0, 0), self.map, "player1.png")
+        self.player = Player((0, 0), self.map, "player.png")
 
-        self.enemies = []
-        for i in range(3):
-            newEnemy = Enemy((i * 40, 200), self.map, "enemy1.png")
+        self.enemies: List[Enemy] = []
+        for i in range(0):
+            newEnemy = Enemy((i * 40, 200), self.map, "enemy.png")
             self.enemies.append(newEnemy)
             self.addCollidingObject(newEnemy)
 
-        self.displayHandler.addObject(self.player)
+        self.buildings: List[Building] = []
+        self.buildings.append(Drugstore("drugstore.png", (200, 200), 10))
+        self.addCollidingObject(self.buildings[0])
+        self.buildings[0].disable()
+
         self.addPlayer()
 
         self.mousePosition = (0, 0)
-        self.bottom_bar = BottomBar((0, const.HEIGHT), "kotek", self.player)
-        self.displayHandler.addObject(self.bottom_bar)
+        # self.bottom_bar = BottomBar((0, const.HEIGHT), "kotek", self.player)
+        # self.displayHandler.addObject(self.bottom_bar)
 
     def progress(self, dt: int):
         """
@@ -48,6 +54,9 @@ class GameEngine:
                     self.player.hit()
                     print(f"hit! {self.player.health}")
                 enemy.rotate(self.player.position())
+
+            for building in self.buildings:
+                building.update()
         self.displayHandler.print()
 
     def keyPress(self, key):
@@ -82,7 +91,7 @@ class GameEngine:
 
     def addCollidingObject(self, newObject: MapObject):
         self.displayHandler.addObject(newObject)
-        self.map.addObject(newObject)
+        self.map.addEnemy(newObject)
 
     def addNonCollidingObject(self, newObject: MapObject):
         self.displayHandler.addObject(newObject)

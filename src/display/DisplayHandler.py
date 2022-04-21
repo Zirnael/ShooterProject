@@ -4,7 +4,6 @@ from os import chdir, path
 
 from src.display.DisplayObject import DisplayObject
 import src.Constants as const
-from src.Constants import WIDTH, HEIGHT, BOTTOM_BAR_HEIGHT, SCREEN_HEIGHT, BLOCK_SIZE
 
 chdir(r"..\map")
 
@@ -12,10 +11,11 @@ chdir(r"..\map")
 class DisplayHandler:
     def __init__(self):
 
-        self.screen: pygame.Surface = pygame.display.set_mode((WIDTH, SCREEN_HEIGHT))
+        self.screen: pygame.Surface = pygame.display.set_mode((const.WIDTH, const.HEIGHT))
+        # self.screen: pygame.Surface = pygame.display.set_mode((WIDTH, SCREEN_HEIGHT))
         self.objects: List[DisplayObject] = []
         self.background: pygame.Surface = pygame.image.load(path.join("images", "grass.jpg")).convert_alpha()
-        self.background = pygame.transform.scale(self.background, (BLOCK_SIZE, BLOCK_SIZE))
+        self.background = pygame.transform.scale(self.background, (const.BLOCK_SIZE, const.BLOCK_SIZE))
 
     def print(self, debugPositions=None) -> None:
         """
@@ -24,8 +24,8 @@ class DisplayHandler:
         """
         for i in range(const.MAP_SIZE):
             for j in range(const.MAP_SIZE):
-                self.screen.blit(self.background, pygame.Rect((BLOCK_SIZE * i, BLOCK_SIZE * j),
-                                                              (BLOCK_SIZE, BLOCK_SIZE)))
+                self.screen.blit(self.background, pygame.Rect((const.BLOCK_SIZE * i, const.BLOCK_SIZE * j),
+                                                              (const.BLOCK_SIZE, const.BLOCK_SIZE)))
 
         # self.screen.fill(const.colors.GREEN)  # background
 

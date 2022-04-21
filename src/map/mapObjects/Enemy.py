@@ -14,9 +14,9 @@ from src.map.RotatingMapObject import RotatingMapObject
 class Enemy(RotatingMapObject):
 
     def __init__(self, position: Tuple[int, int], collisionMap: CollisionMap, texture: str):
-        super().__init__(position, texture, const.ENEMYCOLLISIONSIZE)
-        self.hitDelay: int = -const.AFTERHITDELAY
-        self.speed: float = const.ENEMYSPEED * (random.random() + 0.5)
+        super().__init__(position, texture, const.ENEMY_COLLISION_SIZE)
+        self.hitDelay: int = -const.AFTER_HIT_DELAY
+        self.speed: float = const.ENEMY_SPEED * (random.random() + 0.5)
         self.map: CollisionMap = collisionMap
 
     def simpleMove(self, dt: int, targetPosition: tuple[int, int]) -> bool:
@@ -26,7 +26,7 @@ class Enemy(RotatingMapObject):
         :param targetPosition:
         :return: True if hit the target, otherwise false
         """
-        if pygame.time.get_ticks() - self.hitDelay < const.AFTERHITDELAY:
+        if pygame.time.get_ticks() - self.hitDelay < const.AFTER_HIT_DELAY:
             return False
         xTarget, yTarget = targetPosition
         xMe, yMe = self.displayRectangle.center

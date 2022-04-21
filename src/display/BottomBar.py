@@ -7,13 +7,11 @@ from src.map.mapObjects.Player import Player
 
 
 class BottomBar(DisplayObject):
-    def __init__(self, position: Tuple[int, int], texture: str, player: Player):
-        super().__init__(position, texture)
-        self.position: Tuple[int, int] = position
+    def __init__(self, position: Tuple[int, int], player: Player):
+        super().__init__(position)
         self.rectangle = pygame.Rect((0, HEIGHT), (WIDTH, SCREEN_HEIGHT - BOTTOM_BAR_HEIGHT))
         self.surface = pygame.Surface((WIDTH, SCREEN_HEIGHT - BOTTOM_BAR_HEIGHT))
         self.player = player
-        self.topleft = position
 
     # TODO Display bottom bar with health
 
