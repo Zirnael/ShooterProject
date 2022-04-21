@@ -1,21 +1,18 @@
 from typing import Tuple, List
 import src.Constants as const
 import src.map.CollisionMap as cm
-from src.map.RotatingMapObject import RotatingMapObject
+import src.map.RotatingMapObject as rmo
 
 
-class Player(RotatingMapObject):
+class Player(rmo.RotatingMapObject):
 
-    def __init__(self, position: Tuple[int, int], collisionMap: cm.CollisionMap, texture: str):
+    def __init__(self, position: Tuple[int, int], texture: str):
         super().__init__(position, texture, const.BLOCK_SIZE)
 
         self.speed = const.PLAYER_SPEED
         self.size = (const.BLOCK_SIZE, const.BLOCK_SIZE)
-        self.map = collisionMap
-        self.health = 10
-        self.alive = True
 
-    def move(self, moveVector: List[int], dt: int):
+    def move(self, moveVector: List[int], dt: int, collisionMap: cm.CollisionMap):
 
         if not self.alive:
             return
@@ -41,31 +38,40 @@ class Player(RotatingMapObject):
         newPosition = (newX, newY)
         destination.center = newPosition
 
-        if self.map.isLegalPosition(destination):
+        if collisionMap.isLegalPosition(destination):
             self.changePosition(newPosition)
             return
+        else:
+            building = collisionMap.getBuilding(destination)
+            if building is not None:
+                building.interact(self)
 
         # Now try to move in one direction if you were trying to move in two at the same time
         if xMove != 0 and yMove != 0:
             newPosition = (x, newY)
             destination.center = newPosition
-            if self.map.isLegalPosition(destination):
+            if collisionMap.isLegalPosition(destination):
                 self.changePosition(newPosition)
                 return
             newPosition = (newX, y)
             destination.center = newPosition
 
-            # TODO Debug
-            if self.map.isLegalPosition(destination):
+            if collisionMap.isLegalPosition(destination):
                 self.changePosition(newPosition)
                 return
 
     def heal(self, amount: int):
         if self.alive:
-            self.health += amount
+            self.currentHealth += amount
+            self.currentHealth = min(self.currentHealth, self.maxHealth)
+            print(f"player: {self.currentHealth}/{self.maxHealth}")
 
-    def hit(self):
+    def hit(self, damage: int):
         if self.alive:
-            self.health -= 1
-            if self.health <= 0:
+            self.currentHealth -= damage
+            if self.currentHealth <= 0:
                 self.alive = False
+
+    def rotate(self, targetPosition):
+        if self.alive:
+            super().rotate(targetPosition)

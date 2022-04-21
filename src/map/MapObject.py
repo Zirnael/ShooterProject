@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from os import path
 from typing import Tuple
 import pygame
@@ -9,14 +9,18 @@ import src.Constants as const
 
 class MapObject(DisplayObject, ABC):
 
-    def __init__(self, position: Tuple[int, int], texture: str, collistionRectangleSize: int):
+    def __init__(self, position: Tuple[int, int], texture: str, collistionRectangleSize: int, hitPoints: int):
         """
         Object which is displayed on the map and uses collisions
+        :param hitPoints:
         :param position: Initial position on the map
         :param texture:
         :param collistionRectangleSize: The size of collision can be different from the size of texture displayed
         """
         super().__init__(position)
+        self.maxHealth: int = hitPoints
+        self.currentHealth: int = hitPoints
+        self.alive = True
         self.img: pygame.Surface = pygame.image.load(path.join("images", texture)).convert_alpha()
         self.img = pygame.transform.scale(self.img, (const.BLOCK_SIZE, const.BLOCK_SIZE))
         self.collisionRectangle = pygame.Rect((0, 0), (collistionRectangleSize, collistionRectangleSize))
@@ -31,3 +35,10 @@ class MapObject(DisplayObject, ABC):
     def changePosition(self, position: Tuple[int, int]):
         self.collisionRectangle.center = position
         self.displayRectangle.center = position
+
+    @abstractmethod
+    def hit(self, damage: int):
+        """
+        Recive damage
+        :return:
+        """

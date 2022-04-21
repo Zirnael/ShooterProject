@@ -1,33 +1,35 @@
-from typing import Tuple
+from typing import Tuple, Optional
 
-from math import pi, sqrt, acos, asin
+from math import sqrt
 
 import pygame
 import random
 
 import src.Constants as const
-from src.map import CollisionMap
-from src.map.CollisionMap import CollisionMap
-from src.map.RotatingMapObject import RotatingMapObject
+import src.map.CollisionMap as cm
+import src.map.RotatingMapObject as rmo
+from src.map.MapObject import MapObject
 
 
-class Enemy(RotatingMapObject):
+class Enemy(rmo.RotatingMapObject):
 
-    def __init__(self, position: Tuple[int, int], collisionMap: CollisionMap, texture: str):
+    def __init__(self, position: Tuple[int, int], texture: str):
         super().__init__(position, texture, const.ENEMY_COLLISION_SIZE)
+        self.damage: int = 1
         self.hitDelay: int = -const.AFTER_HIT_DELAY
         self.speed: float = const.ENEMY_SPEED * (random.random() + 0.5)
-        self.map: CollisionMap = collisionMap
 
-    def simpleMove(self, dt: int, targetPosition: tuple[int, int]) -> bool:
+    def simpleMove(self, dt: int, targetPosition: tuple[int, int], collisionMap: cm.CollisionMap) -> Optional[
+        MapObject]:
         """
         Move in target direction
+        :param collisionMap:
         :param dt:
         :param targetPosition:
         :return: True if hit the target, otherwise false
         """
         if pygame.time.get_ticks() - self.hitDelay < const.AFTER_HIT_DELAY:
-            return False
+            return None
         xTarget, yTarget = targetPosition
         xMe, yMe = self.displayRectangle.center
 
@@ -48,15 +50,24 @@ class Enemy(RotatingMapObject):
             signY = (yTarget - yMe) / yDiff
             newY = yMe + travelDistance * signY + self.randomMoveDistance(dt, yDiff)
 
+        """Calculated new position"""
         newPosition = (newX, newY)
         destination = self.collisionRectangle.copy()
         destination.center = newPosition
-        if self.map.doesOverlapPlayer(destination):
+        if collisionMap.doesOverlapPlayer(destination):
             self.hitDelay = pygame.time.get_ticks()
-            return True
-        if self.map.isLegalPosition(destination, self.collisionRectangle):
+            return collisionMap.player
+        attackedBuilding = collisionMap.getBuilding(destination)
+        if attackedBuilding is not None:
+            self.hitDelay = pygame.time.get_ticks()
+            return attackedBuilding
+
+        if collisionMap.isLegalPosition(destination, self):
             self.changePosition(newPosition)
-        return False
+        return None
+
+    def hit(self, damage: int):
+        pass
 
     def randomMoveDistance(self, dt: int, differenceInPositions) -> float:
         """
@@ -109,7 +120,6 @@ class Enemy(RotatingMapObject):
         else:
             newY = yTarget + newYDiff
 
-        print(xMe, xDiff, newXDiff, newX - xTarget)
         self.displayRectangle.center = (newX, newY)
 
     def dijkstraMove(self):

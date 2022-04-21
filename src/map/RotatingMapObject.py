@@ -8,7 +8,7 @@ from abc import ABC
 
 class RotatingMapObject(MapObject, ABC):
     def __init__(self, position: Tuple[int, int], texture: str, collisionRectangleSize: int):
-        super().__init__(position, texture, collisionRectangleSize)
+        super().__init__(position, texture, collisionRectangleSize, 10)
         self.angle: float = 0
 
     def print(self) -> pygame.Surface:

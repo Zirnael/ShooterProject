@@ -10,6 +10,7 @@ from src.map.mapObjects.Enemy import Enemy
 from src.map.mapObjects.Player import Player
 from src.map.MapObject import MapObject
 from src.map.mapObjects.Buildings.Drugstore import Drugstore
+from src.map.mapObjects.Buildings.Wall import Wall
 from src.display.BottomBar import BottomBar
 
 
@@ -19,18 +20,17 @@ class GameEngine:
         self.displayHandler = DisplayHandler()
         self.moveVector: List[int, int] = [0, 0]
         self.map = CollisionMap()
-        self.player = Player((0, 0), self.map, "player.png")
+        self.player = Player((0, 0), "player.png")
 
         self.enemies: List[Enemy] = []
-        for i in range(0):
-            newEnemy = Enemy((i * 40, 200), self.map, "enemy.png")
-            self.enemies.append(newEnemy)
-            self.addCollidingObject(newEnemy)
+        for i in range(2):
+            newEnemy = Enemy((i * const.BLOCK_SIZE, 2*const.BLOCK_SIZE), "enemy.png")
+            self.addEnemy(newEnemy)
 
         self.buildings: List[Building] = []
-        self.buildings.append(Drugstore("drugstore.png", (200, 200), 10))
-        self.addCollidingObject(self.buildings[0])
-        self.buildings[0].disable()
+
+        self.addBuilding(Drugstore("drugstore.png", (2 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE), 10))
+        self.addBuilding(Wall("wall.jpg", (3 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE), 10))
 
         self.addPlayer()
 
@@ -45,18 +45,19 @@ class GameEngine:
         :return:
         """
         if any(self.moveVector):  # move only if some key is pressed
-            self.player.move(self.moveVector, dt)
+            self.player.move(self.moveVector, dt, self.map)
+
         self.player.rotate(self.mousePosition)
+        for enemy in self.enemies:
+            hitObject = enemy.simpleMove(dt, self.player.position(), self.map)
+            if hitObject is not None:
+                hitObject.hit(enemy.damage)
+            enemy.rotate(self.player.position())
 
-        if self.player.alive:
-            for enemy in self.enemies:
-                if enemy.simpleMove(dt, self.player.position()):
-                    self.player.hit()
-                    print(f"hit! {self.player.health}")
-                enemy.rotate(self.player.position())
-
-            for building in self.buildings:
-                building.update()
+        for building in self.buildings:
+            building.update()
+            if not building.alive:
+                self.map.removeBuilding(building)
         self.displayHandler.print()
 
     def keyPress(self, key):
@@ -89,16 +90,22 @@ class GameEngine:
         elif key == pygame.K_UP:
             self.moveVector[1] += 1
 
-    def addCollidingObject(self, newObject: MapObject):
-        self.displayHandler.addObject(newObject)
-        self.map.addEnemy(newObject)
-
     def addNonCollidingObject(self, newObject: MapObject):
         self.displayHandler.addObject(newObject)
 
+    def addEnemy(self, newEnemy):
+        self.enemies.append(newEnemy)
+        self.displayHandler.addObject(newEnemy)
+        self.map.addEnemy(newEnemy)
+
+    def addBuilding(self, newBuilding):
+        self.buildings.append(newBuilding)
+        self.displayHandler.addObject(newBuilding)
+        self.map.addBuilding(newBuilding)
+
     def addPlayer(self):
         self.displayHandler.addObject(self.player)
-        self.map.assignPlayer(self.player.collisionRectangle)
+        self.map.assignPlayer(self.player)
 
     def updateMousePosition(self, position):
         self.mousePosition = position

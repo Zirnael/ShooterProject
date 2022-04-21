@@ -1,41 +1,65 @@
 import pygame
-from typing import List, Optional
-
-from src.map.MapObject import MapObject
+from typing import List
+import src.Constants as const
 
 
 class CollisionMap:
     def __init__(self):
-        self.buildings: List[pygame.Rect] = []
-        self.enemies: List[pygame.Rect] = []
-        self.playerRect: Optional[pygame.Rect] = None
+        self.buildings = []
+        self.buildingsRect: List[pygame.rect] = []
+        self.enemies = []
+        self.enemiesRect: List[pygame.rect] = []
+        self.player = None
+        self.entireScreen: pygame.Rect = pygame.Rect(0, 0, const.WIDTH, const.HEIGHT)
 
-    def addEnemy(self, newObject: MapObject):
-        self.enemies.append(newObject.collisionRectangle)
+    def addEnemy(self, newEnemy):
+        self.enemies.append(newEnemy)
+        self.enemiesRect.append(newEnemy.collisionRectangle)
 
-    def removeEnemy(self, objectToRemove: MapObject):
-        self.enemies.remove(objectToRemove.collisionRectangle)
-
-    def isLegalPosition(self, destination: pygame.Rect, callerEnemy: pygame.Rect = None) -> bool:
-        copy = self.enemies.copy()
+    def removeEnemy(self, delEnemy):
         try:
-            copy.remove(callerEnemy)
+            self.enemies.remove(delEnemy)
+            self.enemiesRect.remove(delEnemy.collisionRectangle)
         except ValueError:
             pass
-        if destination.collidelist(copy) != -1:
+
+    def addBuilding(self, newBuilding):
+        self.buildings.append(newBuilding)
+        self.buildingsRect.append(newBuilding.collisionRectangle)
+
+    def removeBuilding(self, delBuilding):
+        try:
+            self.buildings.remove(delBuilding)
+            self.buildingsRect.remove(delBuilding.collisionRectangle)
+        except ValueError:
+            pass
+
+    def isLegalPosition(self, destination: pygame.Rect, callerEnemy=None) -> bool:
+        if not self.entireScreen.contains(destination):
             return False
-        if destination.collidelist(self.buildings) != -1:
+        
+        copyEnemiesRect = self.enemiesRect.copy()
+        try:
+            copyEnemiesRect.remove(callerEnemy.collisionRectangle)
+        except (ValueError, AttributeError):
+            pass
+        if destination.collidelist(copyEnemiesRect) != -1:
+            return False
+        if destination.collidelist(self.buildingsRect) != -1:
             return False
 
         return True
 
     def doesOverlapPlayer(self, rect: pygame.Rect) -> bool:
-        if self.playerRect is None:
+        if self.player is None:
             return False
-        return self.playerRect.colliderect(rect)
+        return self.player.collisionRectangle.colliderect(rect)
 
-    def assignPlayer(self, pRect: pygame.Rect):
-        self.playerRect: pygame.Rect = pRect
+    def getBuilding(self, rect: pygame.Rect):
+        index = rect.collidelist(self.buildingsRect)
+        if index == -1:
+            return None
+        return self.buildings[index]
 
-
-
+    def assignPlayer(self, player):
+        self.player = player

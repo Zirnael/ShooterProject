@@ -7,17 +7,18 @@ from src.map.mapObjects.Player import Player
 
 
 class Drugstore(Building):
+
     def __init__(self, texture: str, position: Tuple[int, int], hitPoints: int):
         super().__init__(texture, position, hitPoints)
         self.lastUsed = 0
-        self.available = False
+        self.available = True
 
     def update(self):
-        if not self.available and pygame.time.get_ticks() - self.lastUsed > const.DRUGSTORE_COOLDOWN:
+        if self.alive and not self.available and pygame.time.get_ticks() - self.lastUsed > const.DRUGSTORE_COOLDOWN:
             self.enable()
 
     def interact(self, player: Player):
-        if self.available:
+        if self.alive and self.available:
             player.heal(const.DRUGSTORE_RESTORED_HEALTH)
             self.disable()
 
