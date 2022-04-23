@@ -35,8 +35,8 @@ class GameEngine:
         self.addPlayer()
 
         self.mousePosition = (0, 0)
-        # self.bottom_bar = BottomBar((0, const.HEIGHT), "kotek", self.player)
-        # self.displayHandler.addObject(self.bottom_bar)
+        self.bottom_bar = BottomBar((0, const.HEIGHT), self.player)
+        self.displayHandler.addObject(self.bottom_bar)
 
     def progress(self, dt: int):
         """

@@ -1,5 +1,6 @@
 endless war
 
+typevar
 
 lab3 - 
 Michał	mapa(przeszkody,grafika wyświetlanie, pasek na dole[z życiem itd])
@@ -12,7 +13,6 @@ Michał możliwość strzelania (granaty), bronie,
 lab5 - 
 Aleksander wieżyczki, sklep, kopalnia, budowanie muru,  możliwośc rozbudowy
 Michał menu postaci - ulepszenia (życie, pancerz, pieniądze, obrażenia, 
-
 
 lab6 - 
 Aleksander różni przeciwnicy, 

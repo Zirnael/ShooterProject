@@ -1,5 +1,5 @@
 import pygame
-from src.Constants import HEIGHT, WIDTH, SCREEN_HEIGHT, BOTTOM_BAR_HEIGHT, colors
+import src.Constants as const
 from src.engine import GameEngine
 from src.display.DisplayObject import DisplayObject
 from typing import Tuple
@@ -9,17 +9,15 @@ from src.map.mapObjects.Player import Player
 class BottomBar(DisplayObject):
     def __init__(self, position: Tuple[int, int], player: Player):
         super().__init__(position)
-        self.rectangle = pygame.Rect((0, HEIGHT), (WIDTH, SCREEN_HEIGHT - BOTTOM_BAR_HEIGHT))
-        self.surface = pygame.Surface((WIDTH, SCREEN_HEIGHT - BOTTOM_BAR_HEIGHT))
         self.player = player
+        self.font = pygame.font.SysFont('Comic Sans MS', 30)
 
     # TODO Display bottom bar with health
 
     def print(self) -> pygame.Surface:
-        if pygame.font:
-            font = pygame.font.Font(None, 32)
-            health_value = self.player.health
-            text = font.render("Health : " + str(health_value), True, (255, 255, 255))
-            textpos = text.get_rect(left=10, bottom=SCREEN_HEIGHT - BOTTOM_BAR_HEIGHT / 2)
-            self.surface.blit(text, textpos)
-            return self.surface
+        res = pygame.Surface((const.WIDTH, const.BOTTOM_BAR_HEIGHT))
+        health_value = self.player.currentHealth
+        text = self.font.render(f"Health: {self.player.currentHealth}/{self.player.maxHealth}", False, const.colors.WHITE)
+        textpos = text.get_rect(left=10, bottom=const.SCREEN_HEIGHT - const.BOTTOM_BAR_HEIGHT / 2)
+        res.blit(text, (10, 0))
+        return res

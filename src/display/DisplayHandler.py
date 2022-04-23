@@ -11,8 +11,8 @@ chdir(r"..\map")
 class DisplayHandler:
     def __init__(self):
 
-        self.screen: pygame.Surface = pygame.display.set_mode((const.WIDTH, const.HEIGHT))
-        # self.screen: pygame.Surface = pygame.display.set_mode((WIDTH, SCREEN_HEIGHT))
+        # self.screen: pygame.Surface = pygame.display.set_mode((const.WIDTH, const.HEIGHT))
+        self.screen: pygame.Surface = pygame.display.set_mode((const.WIDTH, const.SCREEN_HEIGHT))
         self.objects: List[DisplayObject] = []
         self.background: pygame.Surface = pygame.image.load(path.join("images", "grass.jpg")).convert_alpha()
         self.background = pygame.transform.scale(self.background, (const.BLOCK_SIZE, const.BLOCK_SIZE))

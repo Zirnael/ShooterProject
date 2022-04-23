@@ -70,6 +70,7 @@ class Player(rmo.RotatingMapObject):
         if self.alive:
             self.currentHealth -= damage
             if self.currentHealth <= 0:
+                self.currentHealth = max(self.currentHealth, 0)
                 self.alive = False
 
     def rotate(self, targetPosition):

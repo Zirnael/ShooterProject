@@ -6,6 +6,7 @@ from src.engine.GameEngine import GameEngine
 
 def main():
     pygame.init()
+    pygame.font.init()
     clock = pygame.time.Clock()
     gameEngine = GameEngine()
     run = True

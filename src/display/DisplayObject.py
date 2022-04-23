@@ -9,10 +9,10 @@ class DisplayObject(ABC):
     def __init__(self, position: Tuple[int, int]):
 
         self.displayRectangle = pygame.Rect(position, (const.BLOCK_SIZE, const.BLOCK_SIZE))
-        """Structure to hold position and check for collisions"""
+        """Structure to hold position"""
 
     @abstractmethod
     def print(self):
-        ''' Create and return Surface with size of Block representing an object.
+        """ Create and return Surface with size of Block representing an object.
 
-        It will then be drawn onto the screen in appropriate block on map'''
+        It will then be drawn onto the screen in appropriate place on map"""
