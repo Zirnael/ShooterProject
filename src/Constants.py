@@ -4,8 +4,8 @@ WIDTH = 800
 HEIGHT = WIDTH
 SCREEN_HEIGHT = HEIGHT + BOTTOM_BAR_HEIGHT
 
-MAP_SIZE = 10
-"""The visible area is VISION_RANGE * VISION_RANGE square (in blocks"""
+MAP_SIZE = 20
+"""The visible area is VISION_RANGE * VISION_RANGE square (in blocks)"""
 
 BLOCK_SIZE = WIDTH / MAP_SIZE
 """Building occupy a BLOCK_SIZE * BLOCKSIZE square"""
@@ -22,6 +22,9 @@ ENEMY_SPEED = BLOCK_SIZE / 300
 PLAYER_SPEED = BLOCK_SIZE / 250
 """distance in 1 ms"""
 
+BULLET_SPEED = 10
+"""not distance in 1 ms"""
+
 ENEMY_COLLISION_SIZE = BLOCK_SIZE / 4
 """Size of CollisionRectangle of Enemies"""
 
@@ -31,10 +34,13 @@ DRUGSTORE_COOLDOWN = 5000
 DRUGSTORE_RESTORED_HEALTH = 5
 """How much health the drugstore restores"""
 
+BULLET_LENGTH = 50
+"""How long is the tail of the bullet"""
 
 class colors:
     BLUE = (0, 0, 255)
     GREEN = (0, 255, 0)
     RED = (255, 0, 0)
+    YELLOW = (255, 255, 0)
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)

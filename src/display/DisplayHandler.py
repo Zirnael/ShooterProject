@@ -2,6 +2,7 @@ import pygame
 from typing import List
 from os import chdir, path
 
+from Bullet import Bullet
 from src.display.DisplayObject import DisplayObject
 import src.Constants as const
 
@@ -14,6 +15,7 @@ class DisplayHandler:
         # self.screen: pygame.Surface = pygame.display.set_mode((const.WIDTH, const.HEIGHT))
         self.screen: pygame.Surface = pygame.display.set_mode((const.WIDTH, const.SCREEN_HEIGHT))
         self.objects: List[DisplayObject] = []
+        self.bullets: List[Bullet] = []
         self.background: pygame.Surface = pygame.image.load(path.join("images", "grass.jpg")).convert_alpha()
         self.background = pygame.transform.scale(self.background, (const.BLOCK_SIZE, const.BLOCK_SIZE))
 
@@ -32,6 +34,8 @@ class DisplayHandler:
         for obj in self.objects:
             miniSurface = obj.print()
             self.screen.blit(miniSurface, obj.displayRectangle.topleft)
+        for bullet in self.bullets:
+            pygame.draw.line(self.screen, const.colors.YELLOW, bullet.prevPosition, bullet.currentPosition)
         if debugPositions:
             for x in debugPositions:
                 pygame.draw.circle(self.screen, const.colors.RED, x, 3)
@@ -40,3 +44,6 @@ class DisplayHandler:
 
     def addObject(self, newObject: DisplayObject):
         self.objects.append(newObject)
+
+    def addBullet(self, newBullet):
+        self.bullets.append(newBullet)

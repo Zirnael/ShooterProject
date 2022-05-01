@@ -2,6 +2,7 @@ from typing import Tuple, List
 import src.Constants as const
 import src.map.CollisionMap as cm
 import src.map.RotatingMapObject as rmo
+from Bullet import Bullet
 
 
 class Player(rmo.RotatingMapObject):
@@ -76,3 +77,7 @@ class Player(rmo.RotatingMapObject):
     def rotate(self, targetPosition):
         if self.alive:
             super().rotate(targetPosition)
+
+    def shoot(self, targetPosition) -> List[Bullet]:
+        newBullet = Bullet(self.position(), targetPosition)
+        return [newBullet]

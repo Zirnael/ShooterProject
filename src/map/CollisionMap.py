@@ -1,15 +1,25 @@
+# Weird stuff to make typing without circular imports
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.map.mapObjects.Player import Player
+    from src.map.mapObjects.Enemy import Enemy
+    from src.map.mapObjects.Building import Building
+# End of weird stuff
+
 import pygame
 from typing import List
 import src.Constants as const
 
 
 class CollisionMap:
-    def __init__(self):
-        self.buildings = []
+    def __init__(self, player: Player):
+        self.buildings: List[Building] = []
         self.buildingsRect: List[pygame.rect] = []
-        self.enemies = []
+        self.enemies: List[Enemy] = []
         self.enemiesRect: List[pygame.rect] = []
-        self.player = None
+        self.player: Player = player
         self.entireScreen: pygame.Rect = pygame.Rect(0, 0, const.WIDTH, const.HEIGHT)
 
     def addEnemy(self, newEnemy):
@@ -37,7 +47,7 @@ class CollisionMap:
     def isLegalPosition(self, destination: pygame.Rect, callerEnemy=None) -> bool:
         if not self.entireScreen.contains(destination):
             return False
-        
+
         copyEnemiesRect = self.enemiesRect.copy()
         try:
             copyEnemiesRect.remove(callerEnemy.collisionRectangle)

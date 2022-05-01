@@ -19,17 +19,20 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 key = event.key
                 if key == pygame.K_q or key == pygame.K_ESCAPE:
                     run = False
                 gameEngine.keyPress(key)
-            if event.type == pygame.KEYUP:
+            elif event.type == pygame.KEYUP:
                 key = event.key
                 gameEngine.keyRelese(key)
-            if event.type == pygame.MOUSEMOTION:
+            elif event.type == pygame.MOUSEMOTION:
                 position = event.pos
                 gameEngine.updateMousePosition(position)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                position = event.pos
+                gameEngine.mouseClick(position)
 
         gameEngine.progress(dt)
 

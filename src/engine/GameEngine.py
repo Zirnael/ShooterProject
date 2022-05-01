@@ -3,6 +3,8 @@ from typing import List
 import pygame
 
 import src.Constants as const
+from Bullet import Bullet
+from DisplayObject import DisplayObject
 from src.display.DisplayHandler import DisplayHandler
 from src.map.CollisionMap import CollisionMap
 from src.map.mapObjects.Building import Building
@@ -19,12 +21,12 @@ class GameEngine:
     def __init__(self):
         self.displayHandler = DisplayHandler()
         self.moveVector: List[int, int] = [0, 0]
-        self.map = CollisionMap()
         self.player = Player((0, 0), "player.png")
+        self.map = CollisionMap(self.player)
 
         self.enemies: List[Enemy] = []
-        for i in range(2):
-            newEnemy = Enemy((i * const.BLOCK_SIZE, 2*const.BLOCK_SIZE), "enemy.png")
+        for i in range(20):
+            newEnemy = Enemy((i * const.BLOCK_SIZE, 2 * const.BLOCK_SIZE), "enemy.png")
             self.addEnemy(newEnemy)
 
         self.buildings: List[Building] = []
@@ -33,6 +35,8 @@ class GameEngine:
         self.addBuilding(Wall("wall.jpg", (3 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE), 10))
 
         self.addPlayer()
+
+        self.bullets = []
 
         self.mousePosition = (0, 0)
         self.bottom_bar = BottomBar((0, const.HEIGHT), self.player)
@@ -58,6 +62,10 @@ class GameEngine:
             building.update()
             if not building.alive:
                 self.map.removeBuilding(building)
+
+        for bullet in self.bullets:
+            bullet.move(dt)
+
         self.displayHandler.print()
 
     def keyPress(self, key):
@@ -90,7 +98,7 @@ class GameEngine:
         elif key == pygame.K_UP:
             self.moveVector[1] += 1
 
-    def addNonCollidingObject(self, newObject: MapObject):
+    def addNonCollidingObject(self, newObject: DisplayObject):
         self.displayHandler.addObject(newObject)
 
     def addEnemy(self, newEnemy):
@@ -107,6 +115,15 @@ class GameEngine:
         self.displayHandler.addObject(self.player)
         self.map.assignPlayer(self.player)
 
+    def addBullet(self, newBullet):
+        self.displayHandler.addBullet(newBullet)
+        self.bullets.append(newBullet)
+
     def updateMousePosition(self, position):
         self.mousePosition = position
         self.player.rotate(position)
+
+    def mouseClick(self, position):
+        newBullets = self.player.shoot(position)
+        for newBullet in newBullets:
+            self.addBullet(newBullet)
