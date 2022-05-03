@@ -30,6 +30,8 @@ class DisplayHandler:
                                                               (const.BLOCK_SIZE, const.BLOCK_SIZE)))
 
         # self.screen.fill(const.colors.GREEN)  # background
+        self.objects[:] = [obj for obj in self.objects if obj.shouldDisplay]
+        self.bullets[:] = [bullet for bullet in self.bullets if bullet.alive]
 
         for obj in self.objects:
             miniSurface = obj.print()

@@ -22,7 +22,7 @@ ENEMY_SPEED = BLOCK_SIZE / 300
 PLAYER_SPEED = BLOCK_SIZE / 250
 """distance in 1 ms"""
 
-BULLET_SPEED = 10
+BULLET_SPEED = 100
 """not distance in 1 ms"""
 
 ENEMY_COLLISION_SIZE = BLOCK_SIZE / 4
@@ -31,11 +31,27 @@ ENEMY_COLLISION_SIZE = BLOCK_SIZE / 4
 DRUGSTORE_COOLDOWN = 5000
 """For how long the drugstore becomes inactive after use"""
 
+TURRET_COOLDOWN = 1000
+"""How long does the turret wait between shots"""
+
 DRUGSTORE_RESTORED_HEALTH = 5
 """How much health the drugstore restores"""
 
-BULLET_LENGTH = 50
+BULLET_LENGTH = 20
 """How long is the tail of the bullet"""
+
+GOLDMINE_GOLD = 2
+"""How much gold the goldmine gives"""
+
+GOLDMINE_COOLDOWN = 5000
+"""For how long the goldmine becomes inactive after use"""
+
+SHOP_COOLDOWN = 5000
+"""For how long the shop becomes inactive after use"""
+
+SHOT_COOLDOWN = 1000
+"""How much time needs to pass before player can shoot again"""
+
 
 class colors:
     BLUE = (0, 0, 255)

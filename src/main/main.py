@@ -23,6 +23,10 @@ def main():
                 key = event.key
                 if key == pygame.K_q or key == pygame.K_ESCAPE:
                     run = False
+                elif key == pygame.K_f:
+                    gameEngine.player.maxHealth = 100
+                    gameEngine.player.currentHealth = 50
+                    gameEngine.player.alive = True
                 gameEngine.keyPress(key)
             elif event.type == pygame.KEYUP:
                 key = event.key

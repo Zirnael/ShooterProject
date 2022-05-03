@@ -1,6 +1,7 @@
 import pygame
 import src.Constants as const
 from src.engine import GameEngine
+from os import path
 from src.display.DisplayObject import DisplayObject
 from typing import Tuple
 from src.map.mapObjects.Player import Player
@@ -17,7 +18,9 @@ class BottomBar(DisplayObject):
     def print(self) -> pygame.Surface:
         res = pygame.Surface((const.WIDTH, const.BOTTOM_BAR_HEIGHT))
         health_value = self.player.currentHealth
-        text = self.font.render(f"Health: {self.player.currentHealth}/{self.player.maxHealth}", False, const.colors.WHITE)
-        textpos = text.get_rect(left=10, bottom=const.SCREEN_HEIGHT - const.BOTTOM_BAR_HEIGHT / 2)
+        text = self.font.render(f"Health: {self.player.currentHealth}/{self.player.maxHealth} Gold: {self.player.gold}",
+                                False, const.colors.WHITE)
+        textEnd = text.get_width() + 20
+        # pygame.image.load(path.join("images", texture)).convert_alpha()
         res.blit(text, (10, 0))
         return res

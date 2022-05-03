@@ -1,4 +1,7 @@
 from typing import Tuple, List
+
+import pygame.time
+
 import src.Constants as const
 import src.map.CollisionMap as cm
 import src.map.RotatingMapObject as rmo
@@ -10,8 +13,10 @@ class Player(rmo.RotatingMapObject):
     def __init__(self, position: Tuple[int, int], texture: str):
         super().__init__(position, texture, const.BLOCK_SIZE)
 
+        self.gold = 0
         self.speed = const.PLAYER_SPEED
         self.size = (const.BLOCK_SIZE, const.BLOCK_SIZE)
+        self.lastShot = -const.SHOT_COOLDOWN
 
     def move(self, moveVector: List[int], dt: int, collisionMap: cm.CollisionMap):
 
@@ -39,25 +44,25 @@ class Player(rmo.RotatingMapObject):
         newPosition = (newX, newY)
         destination.center = newPosition
 
-        if collisionMap.isLegalPosition(destination):
+        if collisionMap.isLegalPosition(destination, False, True):
             self.changePosition(newPosition)
             return
         else:
             building = collisionMap.getBuilding(destination)
             if building is not None:
-                building.interact(self)
+                building.interact(collisionMap, self)
 
         # Now try to move in one direction if you were trying to move in two at the same time
         if xMove != 0 and yMove != 0:
             newPosition = (x, newY)
             destination.center = newPosition
-            if collisionMap.isLegalPosition(destination):
+            if collisionMap.isLegalPosition(destination, False, True):
                 self.changePosition(newPosition)
                 return
             newPosition = (newX, y)
             destination.center = newPosition
 
-            if collisionMap.isLegalPosition(destination):
+            if collisionMap.isLegalPosition(destination, False, True):
                 self.changePosition(newPosition)
                 return
 
@@ -79,5 +84,8 @@ class Player(rmo.RotatingMapObject):
             super().rotate(targetPosition)
 
     def shoot(self, targetPosition) -> List[Bullet]:
-        newBullet = Bullet(self.position(), targetPosition)
-        return [newBullet]
+        if pygame.time.get_ticks() - self.lastShot > const.SHOT_COOLDOWN:
+            newBullet = Bullet(self.position(), targetPosition, 10)
+            self.lastShot = pygame.time.get_ticks()
+            return [newBullet]
+        return []

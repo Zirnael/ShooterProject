@@ -1,32 +1,18 @@
 import pygame.time
 
-from src.map.mapObjects.Building import Building
+from CollisionMap import CollisionMap
+from UsableBuilding import UsableBuilding
 from typing import Tuple
 import src.Constants as const
 from src.map.mapObjects.Player import Player
 
 
-class Drugstore(Building):
+class Drugstore(UsableBuilding):
 
     def __init__(self, texture: str, position: Tuple[int, int], hitPoints: int):
-        super().__init__(texture, position, hitPoints)
-        self.lastUsed = 0
-        self.available = True
+        super().__init__(texture, position, hitPoints, const.DRUGSTORE_COOLDOWN)
 
-    def update(self):
-        if self.alive and not self.available and pygame.time.get_ticks() - self.lastUsed > const.DRUGSTORE_COOLDOWN:
-            self.enable()
-
-    def interact(self, player: Player):
+    def interact(self, collistionMap: CollisionMap, player: Player):
         if self.alive and self.available:
             player.heal(const.DRUGSTORE_RESTORED_HEALTH)
             self.disable()
-
-    def disable(self):
-        self.available = False
-        self.lastUsed = pygame.time.get_ticks()
-        self.img.set_alpha(150)
-
-    def enable(self):
-        self.available = True
-        self.img.set_alpha(255)

@@ -62,12 +62,15 @@ class Enemy(rmo.RotatingMapObject):
             self.hitDelay = pygame.time.get_ticks()
             return attackedBuilding
 
-        if collisionMap.isLegalPosition(destination, self):
+        if collisionMap.isLegalPosition(destination, True, True, self):
             self.changePosition(newPosition)
         return None
 
     def hit(self, damage: int):
-        pass
+        self.currentHealth -= damage
+        if self.currentHealth <= 0:
+            self.alive = False
+            self.shouldDisplay = False
 
     def randomMoveDistance(self, dt: int, differenceInPositions) -> float:
         """
@@ -122,8 +125,9 @@ class Enemy(rmo.RotatingMapObject):
 
         self.displayRectangle.center = (newX, newY)
 
-    def dijkstraMove(self):
-        """
-        Use dijkstra algorithm to find optimal path to the target
-        :return:
-        """
+    def print(self):
+        res = super().print()
+        pygame.draw.line(res, const.colors.RED, (3, const.BLOCK_SIZE), (const.BLOCK_SIZE - 3, const.BLOCK_SIZE), 5)
+        pygame.draw.line(res, const.colors.GREEN, (3, const.BLOCK_SIZE),
+                         (max(const.BLOCK_SIZE * self.currentHealth / self.maxHealth - 3, 0), const.BLOCK_SIZE), 5)
+        return res

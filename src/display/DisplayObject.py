@@ -10,6 +10,7 @@ class DisplayObject(ABC):
 
         :param position: Top left corner
         """
+        self.shouldDisplay = True
         self.displayRectangle = pygame.Rect(position, (const.BLOCK_SIZE, const.BLOCK_SIZE))
         """Structure to hold position"""
 

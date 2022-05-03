@@ -1,9 +1,13 @@
 from typing import Tuple
 
 from abc import ABC, abstractmethod
+
+import pygame
+
 import src.map.MapObject as mo
 import src.Constants as const
 import src.map.mapObjects.Player as p
+from CollisionMap import CollisionMap
 
 
 class Building(mo.MapObject, ABC):
@@ -11,14 +15,14 @@ class Building(mo.MapObject, ABC):
         super().__init__(position, texture, const.BLOCK_SIZE, hitPoints)
 
     @abstractmethod
-    def update(self):
+    def update(self, collisionMap: CollisionMap, player: p.Player):
         """
         Every frame a building gets to do whatever it is supposed to
         :return:
         """
 
     @abstractmethod
-    def interact(self, player: p.Player):
+    def interact(self, collistionMap: CollisionMap, player: p.Player):
         """
         Interact with a player if the player steps onto the building
         :return:
@@ -41,3 +45,11 @@ class Building(mo.MapObject, ABC):
         if self.currentHealth <= 0:
             self.alive = False
             self.destroyed()
+
+    def print(self) -> pygame.Surface:
+        pygame.draw.line(self.img, const.colors.RED, (3, const.BLOCK_SIZE), (const.BLOCK_SIZE - 3, const.BLOCK_SIZE), 5)
+        if self.alive:
+            pygame.draw.line(self.img, const.colors.GREEN, (3, const.BLOCK_SIZE),
+                             (max(const.BLOCK_SIZE * self.currentHealth / self.maxHealth - 3, 0), const.BLOCK_SIZE), 5)
+
+        return self.img

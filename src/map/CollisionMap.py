@@ -1,5 +1,7 @@
 # Weird stuff to make typing without circular imports
 from __future__ import annotations
+
+import random
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -11,6 +13,7 @@ if TYPE_CHECKING:
 import pygame
 from typing import List
 import src.Constants as const
+from LineIntersect import rectIntersect
 
 
 class CollisionMap:
@@ -44,7 +47,9 @@ class CollisionMap:
         except ValueError:
             pass
 
-    def isLegalPosition(self, destination: pygame.Rect, callerEnemy=None) -> bool:
+    def isLegalPosition(self, destination: pygame.Rect, considerEnemies=True, considerBuildings=True,
+                        callerEnemy=None) -> bool:
+
         if not self.entireScreen.contains(destination):
             return False
 
@@ -53,9 +58,9 @@ class CollisionMap:
             copyEnemiesRect.remove(callerEnemy.collisionRectangle)
         except (ValueError, AttributeError):
             pass
-        if destination.collidelist(copyEnemiesRect) != -1:
+        if considerEnemies and destination.collidelist(copyEnemiesRect) != -1:
             return False
-        if destination.collidelist(self.buildingsRect) != -1:
+        if considerBuildings and destination.collidelist(self.buildingsRect) != -1:
             return False
 
         return True
@@ -71,5 +76,31 @@ class CollisionMap:
             return None
         return self.buildings[index]
 
+    def getEnemy(self, rect: pygame.Rect):
+        index = rect.collidelist(self.enemiesRect)
+        if index == -1:
+            return None
+        return self.enemies[index]
+
     def assignPlayer(self, player):
         self.player = player
+
+    def getEnemyPoint(self, position):
+        for i, enemy in enumerate(self.enemiesRect):
+            enemy: pygame.Rect
+            if enemy.collidepoint(position):
+                return self.enemies[i]
+        return None
+
+    def getEnemyLine(self, line):
+        for i, enemy in enumerate(self.enemies):
+            enemy: Enemy
+            if rectIntersect(enemy.displayRectangle, line) is not None:
+                return self.enemies[i]
+        return None
+
+    def getRandomEnemy(self):
+        leng = len(self.enemies)
+        if leng == 0:
+            return None
+        return self.enemies[random.randint(0, len(self.enemies) - 1)]

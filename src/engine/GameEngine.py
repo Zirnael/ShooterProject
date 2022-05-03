@@ -5,6 +5,8 @@ import pygame
 import src.Constants as const
 from Bullet import Bullet
 from DisplayObject import DisplayObject
+from Goldmine import Goldmine
+from Turret import Turret
 from src.display.DisplayHandler import DisplayHandler
 from src.map.CollisionMap import CollisionMap
 from src.map.mapObjects.Building import Building
@@ -25,7 +27,7 @@ class GameEngine:
         self.map = CollisionMap(self.player)
 
         self.enemies: List[Enemy] = []
-        for i in range(20):
+        for i in range(5):
             newEnemy = Enemy((i * const.BLOCK_SIZE, 2 * const.BLOCK_SIZE), "enemy.png")
             self.addEnemy(newEnemy)
 
@@ -33,10 +35,12 @@ class GameEngine:
 
         self.addBuilding(Drugstore("drugstore.png", (2 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE), 10))
         self.addBuilding(Wall("wall.jpg", (3 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE), 10))
+        self.addBuilding(Turret("radio.png", (4 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE), 10))
+        self.addBuilding(Goldmine("goldmine.png", (5 * const.BLOCK_SIZE, 2 * const.BLOCK_SIZE), 10))
 
         self.addPlayer()
 
-        self.bullets = []
+        self.bullets: List[Bullet] = []
 
         self.mousePosition = (0, 0)
         self.bottom_bar = BottomBar((0, const.HEIGHT), self.player)
@@ -52,6 +56,11 @@ class GameEngine:
             self.player.move(self.moveVector, dt, self.map)
 
         self.player.rotate(self.mousePosition)
+
+        self.enemies[:] = [enemy for enemy in self.enemies if enemy.alive]
+        self.bullets[:] = [bullet for bullet in self.bullets if bullet.alive]
+        self.buildings[:] = [building for building in self.buildings if building.alive]
+
         for enemy in self.enemies:
             hitObject = enemy.simpleMove(dt, self.player.position(), self.map)
             if hitObject is not None:
@@ -59,12 +68,15 @@ class GameEngine:
             enemy.rotate(self.player.position())
 
         for building in self.buildings:
-            building.update()
+            newBullets = building.update(self.map, self.player)
+            if newBullets is not None:
+                for bullet in newBullets:
+                    self.addBullet(bullet)
             if not building.alive:
                 self.map.removeBuilding(building)
 
         for bullet in self.bullets:
-            bullet.move(dt)
+            bullet.move(dt, self.map)
 
         self.displayHandler.print()
 

@@ -1,0 +1,32 @@
+import pygame.time
+
+import Player as p
+from Building import Building
+from Bullet import Bullet
+from CollisionMap import CollisionMap
+from RotatingMapObject import RotatingMapObject
+import Constants as const
+
+
+class Turret(Building):
+
+    def __init__(self, texture, position, hitPoints):
+        super().__init__(texture, position, hitPoints)
+        self.lastShot = 0
+        self.cooldown = const.TURRET_COOLDOWN
+        self.damage = 5
+        self.img.set_colorkey(const.colors.WHITE)
+
+    def interact(self, collistionMap: CollisionMap, player: p.Player):
+        pass
+
+    def update(self, collisionMap: CollisionMap, player: p.Player):
+        if not self.alive:
+            return
+        currentTime = pygame.time.get_ticks()
+        if currentTime - self.lastShot > self.cooldown:
+            enemy = collisionMap.getRandomEnemy()
+            if enemy is not None:
+                self.lastShot = currentTime
+                return [Bullet(self.position(), enemy.position(), self.damage)]
+        return []
