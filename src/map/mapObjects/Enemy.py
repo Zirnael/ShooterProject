@@ -62,7 +62,7 @@ class Enemy(rmo.RotatingMapObject):
             self.hitDelay = pygame.time.get_ticks()
             return attackedBuilding
 
-        if collisionMap.isLegalPosition(destination, True, True, self):
+        if collisionMap.isLegalPosition(destination, True, True, callerEnemy=self):
             self.changePosition(newPosition)
         return None
 

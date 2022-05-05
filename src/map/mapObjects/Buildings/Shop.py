@@ -5,8 +5,8 @@ import Constants as const
 
 
 class Shop(UsableBuilding):
-    def __init__(self, texture, position, hitPoints):
-        super().__init__(texture, position, hitPoints, const.SHOP_COOLDOWN)
+    def __init__(self, texture, position):
+        super().__init__(texture, position, const.SHOP_HEALTH, const.SHOP_COOLDOWN)
         self.img.set_colorkey(const.colors.WHITE)
 
     def interact(self, collistionMap: CollisionMap, player: p.Player):

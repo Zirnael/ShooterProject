@@ -4,11 +4,12 @@ from typing import Tuple
 from src.map.MapObject import MapObject
 from math import degrees, sqrt, pi, acos
 from abc import ABC
+import Constants as const
 
 
 class RotatingMapObject(MapObject, ABC):
     def __init__(self, position: Tuple[int, int], texture: str, collisionRectangleSize: int):
-        super().__init__(position, texture, collisionRectangleSize, 10)
+        super().__init__(position, texture, collisionRectangleSize, 10, const.BLOCK_SIZE)
         self.angle: float = 0
 
     def print(self) -> pygame.Surface:
@@ -22,7 +23,7 @@ class RotatingMapObject(MapObject, ABC):
     def rotate(self, targetPosition):
         cursorDistance = sqrt(
             (targetPosition[0] - self.displayRectangle.center[0]) ** 2 + (
-                        targetPosition[1] - self.displayRectangle.center[1]) ** 2)
+                    targetPosition[1] - self.displayRectangle.center[1]) ** 2)
 
         newAngle = self.angle
         if cursorDistance == 0:

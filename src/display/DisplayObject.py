@@ -5,13 +5,14 @@ import pygame
 
 
 class DisplayObject(ABC):
-    def __init__(self, position: Tuple[int, int]):
+    def __init__(self, position: Tuple[int, int], size):
         """
 
+        :param size:
         :param position: Top left corner
         """
         self.shouldDisplay = True
-        self.displayRectangle = pygame.Rect(position, (const.BLOCK_SIZE, const.BLOCK_SIZE))
+        self.displayRectangle = pygame.Rect(position, (size, size))
         """Structure to hold position"""
 
     @abstractmethod

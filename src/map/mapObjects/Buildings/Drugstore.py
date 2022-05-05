@@ -9,8 +9,8 @@ from src.map.mapObjects.Player import Player
 
 class Drugstore(UsableBuilding):
 
-    def __init__(self, texture: str, position: Tuple[int, int], hitPoints: int):
-        super().__init__(texture, position, hitPoints, const.DRUGSTORE_COOLDOWN)
+    def __init__(self, texture: str, position: Tuple[int, int]):
+        super().__init__(texture, position, const.DRUGSTORE_HEALTH, const.DRUGSTORE_COOLDOWN)
 
     def interact(self, collistionMap: CollisionMap, player: Player):
         if self.alive and self.available:

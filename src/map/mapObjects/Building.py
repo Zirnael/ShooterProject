@@ -11,8 +11,12 @@ from CollisionMap import CollisionMap
 
 
 class Building(mo.MapObject, ABC):
-    def __init__(self, texture: str, position: Tuple[int, int], hitPoints: int):
-        super().__init__(position, texture, const.BLOCK_SIZE, hitPoints)
+    def __init__(self, texture: str, position: Tuple[int, int], hitPoints: int, isHQ=False):
+        self.isHQ = isHQ
+        if isHQ:
+            super().__init__(position, texture, const.BLOCK_SIZE * 2 - 5, hitPoints, const.BLOCK_SIZE * 2)
+        else:
+            super().__init__(position, texture, const.BLOCK_SIZE - 5, hitPoints, const.BLOCK_SIZE)
 
     @abstractmethod
     def update(self, collisionMap: CollisionMap, player: p.Player):
@@ -47,9 +51,20 @@ class Building(mo.MapObject, ABC):
             self.destroyed()
 
     def print(self) -> pygame.Surface:
-        pygame.draw.line(self.img, const.colors.RED, (3, const.BLOCK_SIZE), (const.BLOCK_SIZE - 3, const.BLOCK_SIZE), 5)
-        if self.alive:
-            pygame.draw.line(self.img, const.colors.GREEN, (3, const.BLOCK_SIZE),
-                             (max(const.BLOCK_SIZE * self.currentHealth / self.maxHealth - 3, 0), const.BLOCK_SIZE), 5)
+        if self.isHQ:
+            pygame.draw.line(self.img, const.colors.RED, (3, const.BLOCK_SIZE * 2),
+                             (const.BLOCK_SIZE * 2 - 3, const.BLOCK_SIZE * 2), 5)
+            if self.alive:
+                pygame.draw.line(self.img, const.colors.GREEN, (3, const.BLOCK_SIZE * 2),
+                                 (max(const.BLOCK_SIZE * 2 * self.currentHealth / self.maxHealth - 3, 0),
+                                  const.BLOCK_SIZE * 2),
+                                 5)
+        else:
+            pygame.draw.line(self.img, const.colors.RED, (3, const.BLOCK_SIZE),
+                             (const.BLOCK_SIZE - 3, const.BLOCK_SIZE), 5)
+            if self.alive:
+                pygame.draw.line(self.img, const.colors.GREEN, (3, const.BLOCK_SIZE),
+                                 (max(const.BLOCK_SIZE * self.currentHealth / self.maxHealth - 3, 0), const.BLOCK_SIZE),
+                                 5)
 
         return self.img

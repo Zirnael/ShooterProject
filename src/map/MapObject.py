@@ -9,20 +9,22 @@ import src.Constants as const
 
 class MapObject(DisplayObject, ABC):
 
-    def __init__(self, position: Tuple[int, int], texture: str, collistionRectangleSize: int, hitPoints: int):
+    def __init__(self, position: Tuple[int, int], texture: str, collistionRectangleSize: int, hitPoints: int,
+                 displayRectangleSize: int):
         """
         Object which is displayed on the map and uses collisions
+        :param size:
         :param hitPoints:
         :param position: Initial position on the map
         :param texture:
         :param collistionRectangleSize: The size of collision can be different from the size of texture displayed
         """
-        super().__init__(position)
+        super().__init__(position, displayRectangleSize)
         self.maxHealth: int = hitPoints
         self.currentHealth: int = hitPoints
         self.alive = True
         self.img: pygame.Surface = pygame.image.load(path.join("images", texture)).convert_alpha()
-        self.img = pygame.transform.scale(self.img, (const.BLOCK_SIZE, const.BLOCK_SIZE))
+        self.img = pygame.transform.scale(self.img, (displayRectangleSize, displayRectangleSize))
         self.collisionRectangle = pygame.Rect((0, 0), (collistionRectangleSize, collistionRectangleSize))
         self.collisionRectangle.center = self.displayRectangle.center
 

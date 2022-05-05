@@ -11,11 +11,10 @@ from Bullet import Bullet
 class Player(rmo.RotatingMapObject):
 
     def __init__(self, position: Tuple[int, int], texture: str):
-        super().__init__(position, texture, const.BLOCK_SIZE)
+        super().__init__(position, texture, const.BLOCK_SIZE / 2)
 
-        self.gold = 0
+        self.gold = 10
         self.speed = const.PLAYER_SPEED
-        self.size = (const.BLOCK_SIZE, const.BLOCK_SIZE)
         self.lastShot = -const.SHOT_COOLDOWN
 
     def move(self, moveVector: List[int], dt: int, collisionMap: cm.CollisionMap):
@@ -31,9 +30,15 @@ class Player(rmo.RotatingMapObject):
         yMove *= self.speed * dt
         if xMove > 0:
             xMove = max(1, xMove)
+        elif xMove < 0:
+            xMove = min(-1, xMove)
         if yMove > 0:
             yMove = max(1, yMove)
+        elif yMove < 0:
+            yMove = min(-1, yMove)
 
+        xMove = int(xMove)
+        yMove = int(yMove)
         newX = x + xMove
         newY = y + yMove
         newY = max(0, newY)
@@ -48,8 +53,8 @@ class Player(rmo.RotatingMapObject):
             self.changePosition(newPosition)
             return
         else:
-            building = collisionMap.getBuilding(destination)
-            if building is not None:
+            buildings = collisionMap.getBuildings(destination)
+            for building in buildings:
                 building.interact(collisionMap, self)
 
         # Now try to move in one direction if you were trying to move in two at the same time
@@ -65,6 +70,30 @@ class Player(rmo.RotatingMapObject):
             if collisionMap.isLegalPosition(destination, False, True):
                 self.changePosition(newPosition)
                 return
+
+        # Now try to move at least a little bit
+        if xMove > 0:
+            xMove = min(1, xMove)
+        elif xMove < 0:
+            xMove = max(-1, xMove)
+        if yMove > 0:
+            yMove = min(1, yMove)
+        elif yMove < 0:
+            yMove = max(-1, yMove)
+
+        newX = x + xMove
+        newY = y + yMove
+        newY = max(0, newY)
+        newY = min(const.HEIGHT, newY)
+        newX = max(0, newX)
+        newX = min(const.WIDTH, newX)
+
+        newPosition = (newX, newY)
+        destination.center = newPosition
+
+        if collisionMap.isLegalPosition(destination, False, True):
+            self.changePosition(newPosition)
+            return
 
     def heal(self, amount: int):
         if self.alive:

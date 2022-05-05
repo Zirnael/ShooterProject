@@ -10,8 +10,8 @@ import Constants as const
 
 class Turret(Building):
 
-    def __init__(self, texture, position, hitPoints):
-        super().__init__(texture, position, hitPoints)
+    def __init__(self, texture, position):
+        super().__init__(texture, position, const.TURRET_HEALTH)
         self.lastShot = 0
         self.cooldown = const.TURRET_COOLDOWN
         self.damage = 5

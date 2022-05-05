@@ -27,6 +27,7 @@ def main():
                     gameEngine.player.maxHealth = 100
                     gameEngine.player.currentHealth = 50
                     gameEngine.player.alive = True
+                    gameEngine.player.gold = 100
                 gameEngine.keyPress(key)
             elif event.type == pygame.KEYUP:
                 key = event.key
@@ -36,7 +37,7 @@ def main():
                 gameEngine.updateMousePosition(position)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 position = event.pos
-                gameEngine.mouseClick(position)
+                gameEngine.mouseClick(position, event.button)
 
         gameEngine.progress(dt)
 

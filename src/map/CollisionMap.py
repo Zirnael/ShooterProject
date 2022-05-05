@@ -48,6 +48,7 @@ class CollisionMap:
             pass
 
     def isLegalPosition(self, destination: pygame.Rect, considerEnemies=True, considerBuildings=True,
+                        considerPlayer=False,
                         callerEnemy=None) -> bool:
 
         if not self.entireScreen.contains(destination):
@@ -62,6 +63,8 @@ class CollisionMap:
             return False
         if considerBuildings and destination.collidelist(self.buildingsRect) != -1:
             return False
+        if considerPlayer and self.doesOverlapPlayer(destination):
+            return False
 
         return True
 
@@ -70,11 +73,13 @@ class CollisionMap:
             return False
         return self.player.collisionRectangle.colliderect(rect)
 
-    def getBuilding(self, rect: pygame.Rect):
-        index = rect.collidelist(self.buildingsRect)
-        if index == -1:
-            return None
-        return self.buildings[index]
+    def getBuildings(self, rect: pygame.Rect):
+        indexes = rect.collidelistall(self.buildingsRect)
+        res = []
+        for index in indexes:
+            res.append(self.buildings[index])
+
+        return res
 
     def getEnemy(self, rect: pygame.Rect):
         index = rect.collidelist(self.enemiesRect)
@@ -104,3 +109,11 @@ class CollisionMap:
         if leng == 0:
             return None
         return self.enemies[random.randint(0, len(self.enemies) - 1)]
+
+    def getBuilding(self, rect):
+        index = rect.collidelist(self.buildingsRect)
+        if index == -1:
+            return None
+        return self.buildings[index]
+
+
