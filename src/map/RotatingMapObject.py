@@ -1,10 +1,11 @@
+from abc import ABC
+from math import degrees, sqrt, pi, acos
+from typing import Tuple
+
 import pygame
 
-from typing import Tuple
-from src.map.MapObject import MapObject
-from math import degrees, sqrt, pi, acos
-from abc import ABC
 import Constants as const
+from src.map.MapObject import MapObject
 
 
 class RotatingMapObject(MapObject, ABC):

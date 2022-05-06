@@ -115,5 +115,3 @@ class CollisionMap:
         if index == -1:
             return None
         return self.buildings[index]
-
-

@@ -1,9 +1,8 @@
+import random
+from math import sqrt
 from typing import Tuple, Optional
 
-from math import sqrt
-
 import pygame
-import random
 
 import src.Constants as const
 import src.map.CollisionMap as cm

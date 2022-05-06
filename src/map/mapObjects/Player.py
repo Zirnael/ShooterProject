@@ -16,6 +16,8 @@ class Player(rmo.RotatingMapObject):
         self.gold = 10
         self.speed = const.PLAYER_SPEED
         self.lastShot = -const.SHOT_COOLDOWN
+        self.boosted = False
+        self.boostedUntil = 0
 
     def move(self, moveVector: List[int], dt: int, collisionMap: cm.CollisionMap):
 
@@ -113,8 +115,24 @@ class Player(rmo.RotatingMapObject):
             super().rotate(targetPosition)
 
     def shoot(self, targetPosition) -> List[Bullet]:
+        if self.boosted:
+            return []
         if pygame.time.get_ticks() - self.lastShot > const.SHOT_COOLDOWN:
             newBullet = Bullet(self.position(), targetPosition, 10)
             self.lastShot = pygame.time.get_ticks()
             return [newBullet]
         return []
+
+    def autoShot(self, mousePosition):
+        if self.boostedUntil < pygame.time.get_ticks():
+            self.boosted = False
+            return []
+        if pygame.time.get_ticks() - self.lastShot > const.BOOST_SHOT_COOLDOWN:
+            newBullet = Bullet(self.position(), mousePosition, 10)
+            self.lastShot = pygame.time.get_ticks()
+            return [newBullet]
+        return []
+
+    def boost(self, effectDuration):
+        self.boosted = True
+        self.boostedUntil = pygame.time.get_ticks() + effectDuration

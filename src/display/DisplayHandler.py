@@ -1,10 +1,11 @@
-import pygame
-from typing import List
 from os import chdir, path
+from typing import List
 
+import pygame
+
+import src.Constants as const
 from Bullet import Bullet
 from src.display.DisplayObject import DisplayObject
-import src.Constants as const
 
 chdir(r"..\map")
 

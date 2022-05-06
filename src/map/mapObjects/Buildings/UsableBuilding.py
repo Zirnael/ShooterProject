@@ -1,4 +1,5 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+
 import pygame
 
 import Player as p
@@ -7,8 +8,8 @@ from CollisionMap import CollisionMap
 
 
 class UsableBuilding(Building, ABC):
-    def __init__(self, texture, position, hitPoints, cooldown):
-        super().__init__(texture, position, hitPoints)
+    def __init__(self, texture, position, hitPoints, cooldown, cost):
+        super().__init__(texture, position, hitPoints, cost)
         self.lastUsed = pygame.time.get_ticks()
         self.available = False
         self.img.set_alpha(150)

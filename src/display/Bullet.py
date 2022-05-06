@@ -1,9 +1,7 @@
-import pygame
+from math import atan, cos, sin, pi
 
 import Constants as const
-from math import atan, cos, sin, pi
 from CollisionMap import CollisionMap
-from LineIntersect import rectIntersect
 
 
 class Bullet:
@@ -34,8 +32,8 @@ class Bullet:
         speed = self.speed * dt / 100
         changeVector = (cos(self.angle) * speed, sin(self.angle) * speed)
         distanceSqr = (self.currentPosition[0] - self.prevPosition[0]) ** 2 + (
-                    self.currentPosition[1] - self.prevPosition[1]) ** 2
-        if distanceSqr > const.BULLET_LENGTH**2:
+                self.currentPosition[1] - self.prevPosition[1]) ** 2
+        if distanceSqr > const.BULLET_LENGTH ** 2:
             self.prevPosition = [sum(x) for x in zip(self.prevPosition, changeVector)]
 
         self.currentPosition = [sum(x) for x in zip(self.currentPosition, changeVector)]

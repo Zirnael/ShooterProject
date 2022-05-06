@@ -1,9 +1,10 @@
-import pygame
-import src.Constants as const
-from src.engine import GameEngine
 from os import path
-from src.display.DisplayObject import DisplayObject
 from typing import Tuple
+
+import pygame
+
+import src.Constants as const
+from src.display.DisplayObject import DisplayObject
 from src.map.mapObjects.Player import Player
 
 
@@ -20,7 +21,6 @@ class BottomBar(DisplayObject):
 
         self.player = player
         self.font = pygame.font.SysFont('Comic Sans MS', 30)
-
 
     def print(self) -> pygame.Surface:
         res = pygame.Surface((const.WIDTH, const.BOTTOM_BAR_HEIGHT))

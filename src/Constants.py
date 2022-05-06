@@ -40,10 +40,14 @@ DRUGSTORE_RESTORED_HEALTH = 5
 DRUGSTORE_HEALTH = 10
 """How much health the drugstore has"""
 
+DRUGSTORE_COST = 10
+
 TURRET_COOLDOWN = 1000
 """How long does the turret wait between shots"""
 
 TURRET_HEALTH = 5
+
+TURRET_COST = 50
 
 BULLET_LENGTH = 20
 """How long is the tail of the bullet"""
@@ -51,22 +55,36 @@ BULLET_LENGTH = 20
 GOLDMINE_GOLD = 2
 """How much gold the goldmine gives"""
 
-GOLDMINE_COOLDOWN = 5000
+GOLDMINE_COOLDOWN = 5_000
 """For how long the goldmine becomes inactive after use"""
+
+GOLDMINE_COST = 15
 
 GOLDMINE_HEALTH = 7
 
-SHOP_COOLDOWN = 5000
-"""For how long the shop becomes inactive after use"""
+SHOP_COOLDOWN = 15_000
+"""For how long the shop becomes inactive after use (in ms)"""
 
 SHOP_HEALTH = 10
+
+SHOP_COST = 20
+
+SHOP_EFFECT_COST = 5
+
+SHOP_EFFECT_DURATION = 2_000
+"""How much time the boost lasts (in ms)"""
 
 SHOT_COOLDOWN = 1000
 """How much time needs to pass before player can shoot again"""
 
+BOOST_SHOT_COOLDOWN = 100
+"""How much time need to pass between auto shots during boost (see shop)"""
+
 HQ_HEALTH = 50
 
 WALL_HEALTH = 15
+
+WALL_COST = 5
 
 
 class colors:

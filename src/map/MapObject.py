@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from os import path
 from typing import Tuple
+
 import pygame
 
 from src.display.DisplayObject import DisplayObject
-import src.Constants as const
 
 
 class MapObject(DisplayObject, ABC):

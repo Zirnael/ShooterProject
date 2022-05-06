@@ -1,17 +1,16 @@
 import pygame.time
 
+import Constants as const
 import Player as p
 from Building import Building
 from Bullet import Bullet
 from CollisionMap import CollisionMap
-from RotatingMapObject import RotatingMapObject
-import Constants as const
 
 
 class Turret(Building):
 
     def __init__(self, texture, position):
-        super().__init__(texture, position, const.TURRET_HEALTH)
+        super().__init__(texture, position, const.TURRET_HEALTH, const.TURRET_COST)
         self.lastShot = 0
         self.cooldown = const.TURRET_COOLDOWN
         self.damage = 5

@@ -1,18 +1,18 @@
-from typing import Tuple
-
 from abc import ABC, abstractmethod
+from typing import Tuple
 
 import pygame
 
-import src.map.MapObject as mo
 import src.Constants as const
+import src.map.MapObject as mo
 import src.map.mapObjects.Player as p
 from CollisionMap import CollisionMap
 
 
 class Building(mo.MapObject, ABC):
-    def __init__(self, texture: str, position: Tuple[int, int], hitPoints: int, isHQ=False):
+    def __init__(self, texture: str, position: Tuple[int, int], hitPoints: int, cost=0, isHQ=False):
         self.isHQ = isHQ
+        self.cost = cost
         if isHQ:
             super().__init__(position, texture, const.BLOCK_SIZE * 2 - 5, hitPoints, const.BLOCK_SIZE * 2)
         else:

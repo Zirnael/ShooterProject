@@ -66,8 +66,6 @@ def segment_intersect(line1, line2):
     return intersection_pt
 
 
-
-
 def rectIntersect(rect: pygame.Rect, line):
     point = segment_intersect((rect.bottomright, rect.bottomleft), line)
     if point:

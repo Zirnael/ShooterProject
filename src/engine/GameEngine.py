@@ -10,15 +10,14 @@ from Headquarters import Headquarters
 from PreparedBuilding import PreparedBuilding
 from Shop import Shop
 from Turret import Turret
+from src.display.BottomBar import BottomBar
 from src.display.DisplayHandler import DisplayHandler
 from src.map.CollisionMap import CollisionMap
 from src.map.mapObjects.Building import Building
-from src.map.mapObjects.Enemy import Enemy
-from src.map.mapObjects.Player import Player
-from src.map.MapObject import MapObject
 from src.map.mapObjects.Buildings.Drugstore import Drugstore
 from src.map.mapObjects.Buildings.Wall import Wall
-from src.display.BottomBar import BottomBar
+from src.map.mapObjects.Enemy import Enemy
+from src.map.mapObjects.Player import Player
 
 
 class GameEngine:
@@ -28,13 +27,13 @@ class GameEngine:
         self.moveVector: List[int, int] = [0, 0]
         self.player = Player((0, 0), "player.png")
         self.map = CollisionMap(self.player)
-        self.buildingsTypes = [("wall.jpg", Wall, 5),
-                               ("goldmine.png", Goldmine, 15),
-                               ("drugstore.png", Drugstore, 30),
-                               ("shop.png", Shop, 20),
-                               ("turret.png", Turret, 50)]
+        self.buildingsTypes = [("wall.jpg", Wall, const.WALL_COST),
+                               ("goldmine.png", Goldmine, const.GOLDMINE_COST),
+                               ("drugstore.png", Drugstore, const.DRUGSTORE_COST),
+                               ("shop.png", Shop, const.SHOP_COST),
+                               ("turret.png", Turret, const.TURRET_COST)]
 
-        self.preparedBuilding = PreparedBuilding((0, 0), self.buildingsTypes[1][0], self.buildingsTypes[1][1])
+        self.preparedBuilding = PreparedBuilding((0, 0))
 
         self.addDisplayObject(self.preparedBuilding)
 
@@ -45,12 +44,12 @@ class GameEngine:
 
         self.buildings: List[Building] = []
 
-        self.HQ = Headquarters((5 * const.BLOCK_SIZE, 5 * const.BLOCK_SIZE), "placeholder.png")
+        self.HQ = Headquarters((5 * const.BLOCK_SIZE, 5 * const.BLOCK_SIZE), "hq.png")
         self.addBuilding(self.HQ)
-        # self.addBuilding(Drugstore("drugstore.png", (2 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE)))
-        # self.addBuilding(Wall("wall.jpg", (3 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE)))
-        # self.addBuilding(Turret("turret.png", (4 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE)))
-        # self.addBuilding(Goldmine("goldmine.png", (5 * const.BLOCK_SIZE, 2 * const.BLOCK_SIZE)))
+        self.addBuilding(Drugstore("drugstore.png", (2 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE)))
+        self.addBuilding(Wall("wall.jpg", (3 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE)))
+        self.addBuilding(Turret("turret.png", (4 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE)))
+        self.addBuilding(Goldmine("goldmine.png", (5 * const.BLOCK_SIZE, 2 * const.BLOCK_SIZE)))
 
         self.addPlayer()
 
@@ -70,6 +69,10 @@ class GameEngine:
             self.player.move(self.moveVector, dt, self.map)
 
         self.player.rotate(self.mousePosition)
+        newBullets = self.player.autoShot(self.mousePosition)
+
+        for bullet in newBullets:
+            self.addBullet(bullet)
 
         self.enemies[:] = [enemy for enemy in self.enemies if enemy.alive]
         self.bullets[:] = [bullet for bullet in self.bullets if bullet.alive]
@@ -94,9 +97,7 @@ class GameEngine:
 
         self.preparedBuilding.isLegal = self.map.isLegalPosition(self.preparedBuilding.displayRectangle,
                                                                  considerPlayer=True)
-        self.displayHandler.print([self.player.collisionRectangle.topleft, self.player.collisionRectangle.topright,
-                                   self.player.collisionRectangle.bottomleft,
-                                   self.player.collisionRectangle.bottomright])
+        self.displayHandler.print()
 
     def keyPress(self, key):
         """
@@ -187,7 +188,11 @@ class GameEngine:
             if self.preparedBuilding.texture is not None:
                 if self.map.isLegalPosition(pygame.Rect((x, y), (const.BLOCK_SIZE, const.BLOCK_SIZE)),
                                             considerPlayer=True):
-                    self.addBuilding(self.preparedBuilding.type(self.preparedBuilding.texture, (x, y)))
+                    newBuilding = self.preparedBuilding.type(self.preparedBuilding.texture, (x, y))
+                    self.addBuilding(newBuilding)
+                    self.player.gold -= newBuilding.cost
+                    if self.player.gold < newBuilding.cost:
+                        self.preparedBuilding.changeBuilding()
             else:
                 newBullets = self.player.shoot(position)
                 for newBullet in newBullets:
