@@ -3,7 +3,7 @@ from typing import Tuple
 
 import pygame
 
-import src.Constants as const
+import other.Constants as const
 import src.map.MapObject as mo
 import src.map.mapObjects.Player as p
 from CollisionMap import CollisionMap
@@ -13,17 +13,20 @@ class Building(mo.MapObject, ABC):
     def __init__(self, texture: str, position: Tuple[int, int], hitPoints: int, cost=0, isHQ=False):
         self.isHQ = isHQ
         self.cost = cost
+        self.disappearStart = 0
+
         if isHQ:
             super().__init__(position, texture, const.BLOCK_SIZE * 2 - 5, hitPoints, const.BLOCK_SIZE * 2)
         else:
             super().__init__(position, texture, const.BLOCK_SIZE - 5, hitPoints, const.BLOCK_SIZE)
 
-    @abstractmethod
     def update(self, collisionMap: CollisionMap, player: p.Player):
         """
         Every frame a building gets to do whatever it is supposed to
         :return:
         """
+        if not self.alive and pygame.time.get_ticks() - self.disappearStart > const.BUILDING_DISAPPEAR_TIME:
+            self.shouldDisplay = False
 
     @abstractmethod
     def interact(self, collistionMap: CollisionMap, player: p.Player):
@@ -37,7 +40,8 @@ class Building(mo.MapObject, ABC):
         Method is called when the building gets destroyed
         :return:
         """
-        self.img.set_alpha(50)
+        self.img.set_alpha(100)
+        self.disappearStart = pygame.time.get_ticks()
 
     def hit(self, damage: int):
         """
@@ -56,7 +60,7 @@ class Building(mo.MapObject, ABC):
                              (const.BLOCK_SIZE * 2 - 3, const.BLOCK_SIZE * 2), 5)
             if self.alive:
                 pygame.draw.line(self.img, const.colors.GREEN, (3, const.BLOCK_SIZE * 2),
-                                 (max(const.BLOCK_SIZE * 2 * self.currentHealth / self.maxHealth - 3, 0),
+                                 (max(const.BLOCK_SIZE * 2 * self.currentHealth / self.maxHealth - 3, 3),
                                   const.BLOCK_SIZE * 2),
                                  5)
         else:

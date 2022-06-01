@@ -1,6 +1,6 @@
 import pygame.time
 
-import Constants as const
+from other import Constants as const
 import Player as p
 from Building import Building
 from Bullet import Bullet
@@ -20,6 +20,7 @@ class Turret(Building):
         pass
 
     def update(self, collisionMap: CollisionMap, player: p.Player):
+        super().update(collisionMap, player)
         if not self.alive:
             return
         currentTime = pygame.time.get_ticks()

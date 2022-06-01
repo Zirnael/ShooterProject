@@ -1,7 +1,7 @@
 from typing import Tuple
 
-import Constants as const
-import src.map.mapObjects.Building as b
+from other import Constants as const
+import Building as b
 import src.map.mapObjects.Player as p
 from CollisionMap import CollisionMap
 
@@ -12,7 +12,7 @@ class Wall(b.Building):
         super().__init__(texture, position, const.WALL_HEALTH, const.WALL_COST)
 
     def update(self, collisionMap: CollisionMap, player: p.Player):
-        pass
+        super().update(collisionMap, player)
 
     def interact(self, collistionMap: CollisionMap, player: p.Player):
         pass

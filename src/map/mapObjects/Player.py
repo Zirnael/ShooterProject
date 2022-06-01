@@ -2,7 +2,7 @@ from typing import Tuple, List
 
 import pygame.time
 
-import src.Constants as const
+import other.Constants as const
 import src.map.CollisionMap as cm
 import src.map.RotatingMapObject as rmo
 from Bullet import Bullet
@@ -11,9 +11,9 @@ from Bullet import Bullet
 class Player(rmo.RotatingMapObject):
 
     def __init__(self, position: Tuple[int, int], texture: str):
-        super().__init__(position, texture, const.BLOCK_SIZE / 2)
+        super().__init__(position, texture, const.BLOCK_SIZE / 2, const.PLAYER_HEALTH, const.BLOCK_SIZE)
 
-        self.gold = 10
+        self.gold = 15
         self.speed = const.PLAYER_SPEED
         self.lastShot = -const.SHOT_COOLDOWN
         self.boosted = False
@@ -118,7 +118,7 @@ class Player(rmo.RotatingMapObject):
         if self.boosted:
             return []
         if pygame.time.get_ticks() - self.lastShot > const.SHOT_COOLDOWN:
-            newBullet = Bullet(self.position(), targetPosition, 10)
+            newBullet = Bullet(self.position(), targetPosition, const.PLAYER_DAMAGE)
             self.lastShot = pygame.time.get_ticks()
             return [newBullet]
         return []

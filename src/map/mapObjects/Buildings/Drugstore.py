@@ -1,6 +1,6 @@
 from typing import Tuple
 
-import src.Constants as const
+import other.Constants as const
 from CollisionMap import CollisionMap
 from UsableBuilding import UsableBuilding
 from src.map.mapObjects.Player import Player

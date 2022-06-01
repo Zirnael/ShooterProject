@@ -2,7 +2,7 @@ from os import path
 
 import pygame.image
 
-import Constants as const
+from other import Constants as const
 from DisplayObject import DisplayObject
 
 

@@ -13,7 +13,6 @@ class MapObject(DisplayObject, ABC):
                  displayRectangleSize: int):
         """
         Object which is displayed on the map and uses collisions
-        :param size:
         :param hitPoints:
         :param position: Initial position on the map
         :param texture:

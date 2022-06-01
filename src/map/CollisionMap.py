@@ -6,14 +6,15 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.map.mapObjects.Player import Player
-    from src.map.mapObjects.Enemy import Enemy
-    from src.map.mapObjects.Building import Building
+    from Enemies.BaseEnemy import BaseEnemy
+    from Enemies.Enemy import Enemy
+    from Building import Building
 # End of weird stuff
 
 import pygame
 from typing import List
-import src.Constants as const
-from LineIntersect import rectIntersect
+import other.Constants as const
+from other.LineIntersect import rectIntersect
 
 
 class CollisionMap:
@@ -24,6 +25,9 @@ class CollisionMap:
         self.enemiesRect: List[pygame.rect] = []
         self.player: Player = player
         self.entireScreen: pygame.Rect = pygame.Rect(0, 0, const.WIDTH, const.HEIGHT)
+        self.extendedScreen: pygame.Rect = pygame.Rect(-const.BLOCK_SIZE, -const.BLOCK_SIZE,
+                                                       const.WIDTH + 2 * const.BLOCK_SIZE,
+                                                       const.HEIGHT + 2 * const.BLOCK_SIZE)
 
     def addEnemy(self, newEnemy):
         self.enemies.append(newEnemy)
@@ -49,9 +53,12 @@ class CollisionMap:
 
     def isLegalPosition(self, destination: pygame.Rect, considerEnemies=True, considerBuildings=True,
                         considerPlayer=False,
-                        callerEnemy=None) -> bool:
+                        callerEnemy=None, extendedMap=False) -> bool:
 
-        if not self.entireScreen.contains(destination):
+        if not extendedMap and not self.entireScreen.contains(destination):
+            return False
+
+        if not self.extendedScreen.contains(destination):
             return False
 
         copyEnemiesRect = self.enemiesRect.copy()
@@ -99,7 +106,7 @@ class CollisionMap:
 
     def getEnemyLine(self, line):
         for i, enemy in enumerate(self.enemies):
-            enemy: Enemy
+            enemy: BaseEnemy
             if rectIntersect(enemy.displayRectangle, line) is not None:
                 return self.enemies[i]
         return None

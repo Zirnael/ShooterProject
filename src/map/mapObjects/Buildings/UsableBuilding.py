@@ -27,5 +27,6 @@ class UsableBuilding(Building, ABC):
     def update(self, collisionMap: CollisionMap, player: p.Player):
         """Enable if 'cooldown' time has passed
         """
+        super().update(collisionMap, player)
         if self.alive and not self.available and pygame.time.get_ticks() - self.lastUsed > self.cooldown:
             self.enable()

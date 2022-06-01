@@ -1,6 +1,6 @@
 import pygame
 
-import src.Constants as const
+import other.Constants as const
 from src.engine.GameEngine import GameEngine
 
 
@@ -27,7 +27,9 @@ def main():
                     gameEngine.player.maxHealth = 100
                     gameEngine.player.currentHealth = 50
                     gameEngine.player.alive = True
-                    gameEngine.player.gold = 100
+                    gameEngine.player.gold = 200
+                elif key == pygame.K_c:
+                    gameEngine.waveCounter.generateWave()
                 gameEngine.keyPress(key)
             elif event.type == pygame.KEYUP:
                 key = event.key

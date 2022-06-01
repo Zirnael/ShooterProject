@@ -1,4 +1,4 @@
-import Constants as const
+from other import Constants as const
 import Player as p
 from CollisionMap import CollisionMap
 from UsableBuilding import UsableBuilding

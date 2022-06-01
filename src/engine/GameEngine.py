@@ -2,9 +2,11 @@ from typing import List
 
 import pygame
 
-import src.Constants as const
+import other.Constants as const
+from Building import Building
 from Bullet import Bullet
 from DisplayObject import DisplayObject
+from Enemies.Enemy import Enemy
 from Goldmine import Goldmine
 from Headquarters import Headquarters
 from PreparedBuilding import PreparedBuilding
@@ -12,11 +14,10 @@ from Shop import Shop
 from Turret import Turret
 from src.display.BottomBar import BottomBar
 from src.display.DisplayHandler import DisplayHandler
+from src.engine.WaveCounter import WaveCounter
 from src.map.CollisionMap import CollisionMap
-from src.map.mapObjects.Building import Building
 from src.map.mapObjects.Buildings.Drugstore import Drugstore
 from src.map.mapObjects.Buildings.Wall import Wall
-from src.map.mapObjects.Enemy import Enemy
 from src.map.mapObjects.Player import Player
 
 
@@ -24,8 +25,10 @@ class GameEngine:
 
     def __init__(self):
         self.displayHandler = DisplayHandler()
+        self.gameActive = True
         self.moveVector: List[int, int] = [0, 0]
-        self.player = Player((0, 0), "player.png")
+
+        self.player = Player((5 * const.BLOCK_SIZE, 5 * const.BLOCK_SIZE), "player.png")
         self.map = CollisionMap(self.player)
         self.buildingsTypes = [("wall.jpg", Wall, const.WALL_COST),
                                ("goldmine.png", Goldmine, const.GOLDMINE_COST),
@@ -38,18 +41,12 @@ class GameEngine:
         self.addDisplayObject(self.preparedBuilding)
 
         self.enemies: List[Enemy] = []
-        for i in range(5):
-            newEnemy = Enemy((i * const.BLOCK_SIZE, 2 * const.BLOCK_SIZE), "enemy.png")
-            self.addEnemy(newEnemy)
 
         self.buildings: List[Building] = []
 
-        self.HQ = Headquarters((5 * const.BLOCK_SIZE, 5 * const.BLOCK_SIZE), "hq.png")
+        self.HQ = Headquarters((9 * const.BLOCK_SIZE, 8 * const.BLOCK_SIZE), "hq.png")
+        # self.HQ = Headquarters((5 * const.BLOCK_SIZE, 5 * const.BLOCK_SIZE), "hq.png")
         self.addBuilding(self.HQ)
-        self.addBuilding(Drugstore("drugstore.png", (2 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE)))
-        self.addBuilding(Wall("wall.jpg", (3 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE)))
-        self.addBuilding(Turret("turret.png", (4 * const.BLOCK_SIZE, 3 * const.BLOCK_SIZE)))
-        self.addBuilding(Goldmine("goldmine.png", (5 * const.BLOCK_SIZE, 2 * const.BLOCK_SIZE)))
 
         self.addPlayer()
 
@@ -57,7 +54,10 @@ class GameEngine:
 
         self.mousePosition = (0, 0)
         self.bottom_bar = BottomBar((0, const.HEIGHT), self.player, self.buildingsTypes)
+
         self.displayHandler.addObject(self.bottom_bar)
+
+        self.waveCounter = WaveCounter(self.bottom_bar, self.player, self.HQ, self.addEnemy)
 
     def progress(self, dt: int):
         """
@@ -65,38 +65,44 @@ class GameEngine:
         :param dt: How much time passed since the last frame
         :return:
         """
-        if any(self.moveVector):  # move only if some key is pressed
-            self.player.move(self.moveVector, dt, self.map)
+        if self.gameActive:
+            if any(self.moveVector):  # move only if some key is pressed
+                self.player.move(self.moveVector, dt, self.map)
 
-        self.player.rotate(self.mousePosition)
-        newBullets = self.player.autoShot(self.mousePosition)
+            self.player.rotate(self.mousePosition)
+            newBullets = self.player.autoShot(self.mousePosition)
 
-        for bullet in newBullets:
-            self.addBullet(bullet)
+            for bullet in newBullets:
+                self.addBullet(bullet)
 
-        self.enemies[:] = [enemy for enemy in self.enemies if enemy.alive]
-        self.bullets[:] = [bullet for bullet in self.bullets if bullet.alive]
-        self.buildings[:] = [building for building in self.buildings if building.alive]
+            self.enemies[:] = [enemy for enemy in self.enemies if enemy.alive]
+            self.bullets[:] = [bullet for bullet in self.bullets if bullet.alive]
+            self.buildings[:] = [building for building in self.buildings if building.alive or building.shouldDisplay]
 
-        for enemy in self.enemies:
-            hitObject = enemy.simpleMove(dt, self.player.position(), self.map)
-            if hitObject is not None:
-                hitObject.hit(enemy.damage)
-            enemy.rotate(self.player.position())
+            for enemy in self.enemies:
+                hitObject = enemy.move(dt, self.map)
+                if hitObject is not None:
+                    hitObject.hit(enemy.damage)
+                enemy.rotate(self.player.position())
 
-        for building in self.buildings:
-            newBullets = building.update(self.map, self.player)
-            if newBullets is not None:
-                for bullet in newBullets:
-                    self.addBullet(bullet)
-            if not building.alive:
-                self.map.removeBuilding(building)
+            for building in self.buildings:
+                newBullets = building.update(self.map, self.player)
+                if newBullets is not None:
+                    for bullet in newBullets:
+                        self.addBullet(bullet)
+                if not building.alive:
+                    self.map.removeBuilding(building)
 
-        for bullet in self.bullets:
-            bullet.move(dt, self.map)
+            for bullet in self.bullets:
+                bullet.move(dt, self.map)
 
-        self.preparedBuilding.isLegal = self.map.isLegalPosition(self.preparedBuilding.displayRectangle,
-                                                                 considerPlayer=True)
+            self.waveCounter.update()
+
+            self.preparedBuilding.isLegal = self.map.isLegalPosition(self.preparedBuilding.displayRectangle,
+                                                                     considerPlayer=True)
+            if not self.player.alive or not self.HQ.alive:
+                self.gameOver()
+
         self.displayHandler.print()
 
     def keyPress(self, key):
@@ -197,3 +203,7 @@ class GameEngine:
                 newBullets = self.player.shoot(position)
                 for newBullet in newBullets:
                     self.addBullet(newBullet)
+
+    def gameOver(self):
+        self.bottom_bar.waveCountMessage = "Game over"
+        self.gameActive = False

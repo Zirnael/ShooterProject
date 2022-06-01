@@ -1,6 +1,6 @@
 from math import atan, cos, sin, pi
 
-import Constants as const
+from other import Constants as const
 from CollisionMap import CollisionMap
 
 

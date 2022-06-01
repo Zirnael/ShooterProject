@@ -3,7 +3,7 @@ from typing import List
 
 import pygame
 
-import src.Constants as const
+import other.Constants as const
 from Bullet import Bullet
 from src.display.DisplayObject import DisplayObject
 

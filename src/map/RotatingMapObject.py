@@ -4,16 +4,18 @@ from typing import Tuple
 
 import pygame
 
-import Constants as const
 from src.map.MapObject import MapObject
 
 
 class RotatingMapObject(MapObject, ABC):
-    def __init__(self, position: Tuple[int, int], texture: str, collisionRectangleSize: int):
-        super().__init__(position, texture, collisionRectangleSize, 10, const.BLOCK_SIZE)
+    def __init__(self, position: Tuple[int, int], texture: str, collisionRectangleSize: int, hitPoints,
+                 displayRectangleSize):
+        super().__init__(position, texture, collisionRectangleSize, hitPoints, displayRectangleSize)
         self.angle: float = 0
 
-    def print(self) -> pygame.Surface:
+    def print(self, toRotate=True) -> pygame.Surface:
+        if not toRotate:
+            return self.img
         orig_rect = self.img.get_rect()
         rot_image = pygame.transform.rotate(self.img, -degrees(self.angle))
         rot_rect = orig_rect.copy()
