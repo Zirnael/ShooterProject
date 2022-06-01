@@ -1,9 +1,9 @@
 from typing import Tuple
 
-from other import Constants as const
 import Building as b
 import src.map.mapObjects.Player as p
 from CollisionMap import CollisionMap
+from other import Constants as const
 
 
 class Wall(b.Building):

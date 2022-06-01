@@ -2,8 +2,8 @@ from os import path
 
 import pygame.image
 
-from other import Constants as const
 from DisplayObject import DisplayObject
+from other import Constants as const
 
 
 class PreparedBuilding(DisplayObject):

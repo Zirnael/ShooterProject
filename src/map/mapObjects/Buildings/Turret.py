@@ -1,10 +1,10 @@
 import pygame.time
 
-from other import Constants as const
 import Player as p
 from Building import Building
 from Bullet import Bullet
 from CollisionMap import CollisionMap
+from other import Constants as const
 
 
 class Turret(Building):

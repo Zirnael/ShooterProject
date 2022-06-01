@@ -1,7 +1,7 @@
-from other import Constants as const
 import Player as p
 from CollisionMap import CollisionMap
 from UsableBuilding import UsableBuilding
+from other import Constants as const
 
 
 class Shop(UsableBuilding):

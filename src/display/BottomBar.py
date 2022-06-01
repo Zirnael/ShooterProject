@@ -12,7 +12,7 @@ class BottomBar(DisplayObject):
     def __init__(self, position: Tuple[int, int], player: Player, buildingTypes):
         super().__init__(position, const.BLOCK_SIZE)
         self.nextWaveMessage: str = ""
-        self.waveCountMessage:  str = ""
+        self.waveCountMessage: str = ""
         self.scoreMessage: str = ""
         self.buildingTypes = buildingTypes
         self.images = []

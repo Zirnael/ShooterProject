@@ -1,7 +1,7 @@
 from math import atan, cos, sin, pi
 
-from other import Constants as const
 from CollisionMap import CollisionMap
+from other import Constants as const
 
 
 class Bullet:
