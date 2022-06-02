@@ -28,6 +28,10 @@ def main():
                     gameEngine.player.currentHealth = 50
                     gameEngine.player.alive = True
                     gameEngine.player.gold = 200
+                    gameEngine.gameActive = True
+                    gameEngine.HQ.shouldDisplay = True
+                    gameEngine.HQ.alive = True
+                    gameEngine.HQ.currentHealth = gameEngine.HQ.maxHealth
                 elif key == pygame.K_c:
                     gameEngine.waveCounter.generateWave()
                 gameEngine.keyPress(key)
