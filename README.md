@@ -1,4 +1,4 @@
-# Aleksander Pytel - projekt z Pythona
+# Aleksander Pytel - projekt z Python'a
 
 Tematem mojego projektu była prosta gra z wykorzystaniem biblioteki pygame.
 
